@@ -24,6 +24,7 @@ const Login = () => {
     // 구글로 로그인 하기
   };
 
+  // user 있다면 홈으로
   if (user) {
     navigate("/");
   }

@@ -3,7 +3,18 @@ import * as types from "../constants/user.constants";
 import { commonUiActions } from "./commonUiAction";
 import * as commonTypes from "../constants/commonUI.constants";
 import { type } from "@testing-library/user-event/dist/type";
-const loginWithToken = () => async (dispatch) => {};
+const loginWithToken = () => async (dispatch) => {
+  try {
+    dispatch({type:types.LOGIN_WITH_TOKEN_REQUEST});
+    const response = await api.get('/user/me')
+    if (response.status !== 200) throw new Error(response.error)
+    console.log('rrr', response.data)
+    dispatch({type: types.LOGIN_WITH_TOKEN_SUCCESS, payload : response?.data})
+  } catch (error) {
+    dispatch({type: types.LOGIN_WITH_TOKEN_FAIL, payload : error})
+    dispatch(logout())
+  }
+};
 const loginWithEmail = ({email, password}) => async (dispatch) => {
   try {
     dispatch({type : types.LOGIN_REQUEST});
@@ -13,9 +24,13 @@ const loginWithEmail = ({email, password}) => async (dispatch) => {
     dispatch({ type : types.LOGIN_SUCCESS, payload : response.data });
   } catch (error) {
     dispatch({type : types.LOGIN_FAIL, payload : error.error})
+    dispatch(logout())
   }
 }
-const logout = () => async (dispatch) => {};
+const logout = () => async (dispatch) => {
+  dispatch({type : types.LOGOUT})
+  sessionStorage.removeItem('token')
+};
 
 const loginWithGoogle = (token) => async (dispatch) => {};
 
