@@ -3,6 +3,7 @@ import { Container, Form, Button, Alert } from "react-bootstrap";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router";
 import { userActions } from "../action/userAction";
+import ClipLoader from "react-spinners/ClipLoader"
 import "../style/register.style.css";
 const RegisterPage = () => {
   const dispatch = useDispatch();
@@ -16,6 +17,7 @@ const RegisterPage = () => {
   const navigate = useNavigate();
   const [passwordError, setPasswordError] = useState("");
   const [policyError, setPolicyError] = useState(false);
+  const loading = useSelector((state) => state.user.loading);
   const error = useSelector((state) => state.user.error);
 
   const register = (event) => {
@@ -48,6 +50,14 @@ const RegisterPage = () => {
       setFormData({...formData, [id] : value});
     }
   };
+
+  if (loading){
+    return (
+      <div className="loading-container">
+        <ClipLoader color="#11111" loading={loading} size={200} aria-label="Loading Spinner"/>
+      </div>
+    )
+  }
 
   return (
     <Container className="register-area">

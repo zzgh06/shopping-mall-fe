@@ -3,16 +3,19 @@ import { Container, Form, Button, Alert } from "react-bootstrap";
 import { Link, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { userActions } from "../action/userAction";
+import ClipLoader from "react-spinners/ClipLoader"
+
 
 import "../style/login.style.css";
 
 const Login = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const { user } = useSelector((state) => state.user);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const { user } = useSelector((state) => state.user);
   const error = useSelector((state) => state.user.error);
+  const loading = useSelector((state) => state.user.loading);
 
   const loginWithEmail = async (event) => {
     event.preventDefault();
@@ -24,6 +27,14 @@ const Login = () => {
     // 구글로 로그인 하기
   };
 
+  
+  if (loading){
+    return (
+      <div className="loading-container">
+        <ClipLoader color="#11111" loading={loading} size={150} aria-label="Loading Spinner"/>
+      </div>
+    )
+  }
   // user 있다면 홈으로
   if (user) {
     navigate("/");
