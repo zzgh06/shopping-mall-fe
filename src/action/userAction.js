@@ -50,6 +50,10 @@ const registerUser = ({ email, name, password }, navigate) => async (dispatch) =
   }
 };
 
+const clearError = () => async (dispatch) => {
+  dispatch({type : types.CLEAR_ERROR})
+}
+
   
 export const userActions = {
   loginWithToken,
@@ -57,4 +61,5 @@ export const userActions = {
   logout,
   loginWithGoogle,
   registerUser,
+  clearError,
 };

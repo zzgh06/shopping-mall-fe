@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Container, Form, Button, Alert } from "react-bootstrap";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router";
@@ -50,6 +50,13 @@ const RegisterPage = () => {
       setFormData({...formData, [id] : value});
     }
   };
+
+  // 에러 메세지 초기화
+  useEffect(()=>{
+    return () => {
+      dispatch(userActions.clearError());
+    };
+  }, [dispatch])
 
   if (loading){
     return (

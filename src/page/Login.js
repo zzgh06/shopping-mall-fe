@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Container, Form, Button, Alert } from "react-bootstrap";
 import { Link, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
@@ -26,6 +26,13 @@ const Login = () => {
   const handleGoogleLogin = async (googleData) => {
     // 구글로 로그인 하기
   };
+
+  // 에러 메세지 초기화
+  useEffect(()=>{
+    return () => {
+      dispatch(userActions.clearError());
+    };
+  }, [dispatch])
 
   
   if (loading){
