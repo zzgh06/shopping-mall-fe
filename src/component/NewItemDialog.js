@@ -21,10 +21,10 @@ const InitialFormData = {
   price: 0,
 };
 const NewItemDialog = ({ mode, showDialog, setShowDialog }) => {
-  const selectedProduct = useSelector((state) => state.product.selectedProduct);
+  // const selectedProduct = useSelector((state) => state.product.selectedProduct);
   // const { error } = useSelector((state) => state.product);
   const [formData, setFormData] = useState(
-    mode === "new" ? { ...InitialFormData } : selectedProduct
+    mode === "new" ? { ...InitialFormData } : "selectedProduct"
   );
   const [stock, setStock] = useState([]);
   const dispatch = useDispatch();

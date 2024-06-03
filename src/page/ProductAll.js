@@ -6,8 +6,6 @@ import { useDispatch, useSelector } from "react-redux";
 import { productActions } from "../action/productAction";
 
 const ProductAll = () => {
-  const dispatch = useDispatch();
-  const error = useSelector((state) => state.product.error);
   // 처음 로딩하면 상품리스트 불러오기
 
   return (
