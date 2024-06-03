@@ -41,6 +41,7 @@ const Navbar = ({ user }) => {
   const logout = () => {
     userLogout();
   };
+
   return (
     <div>
       {showSearchBox && (
@@ -74,7 +75,7 @@ const Navbar = ({ user }) => {
           ))}
         </div>
       </div>
-      {user && user.level === "admin" && (
+      {user && user?.level === "admin" && (
         <Link to="/admin/product?page=1" className="link-area">
           Admin page
         </Link>

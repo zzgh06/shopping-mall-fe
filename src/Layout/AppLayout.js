@@ -28,7 +28,7 @@ const AppLayout = ({ children }) => {
         </Row>
       ) : (
         <>
-          <Navbar user={user} />
+          <Navbar user={user?.user} />
           {children}
         </>
       )}

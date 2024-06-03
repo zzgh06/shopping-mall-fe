@@ -20,6 +20,7 @@ const AdminProduct = () => {
   }); //검색 조건들을 저장하는 객체
 
   const [mode, setMode] = useState("new");
+
   const tableHeader = [
     "#",
     "Sku",
@@ -48,7 +49,9 @@ const AdminProduct = () => {
 
   const handleClickNewItem = () => {
     //new 모드로 설정하고
+    setMode("new")
     // 다이얼로그 열어주기
+    setShowDialog(true)
   };
 
   const handlePageClick = ({ selected }) => {
@@ -76,7 +79,7 @@ const AdminProduct = () => {
           deleteItem={deleteItem}
           openEditForm={openEditForm}
         />
-        <ReactPaginate
+        <ReactPaginate 
           nextLabel="next >"
           onPageChange={handlePageClick}
           pageRangeDisplayed={5}
@@ -95,7 +98,7 @@ const AdminProduct = () => {
           breakLinkClassName="page-link"
           containerClassName="pagination"
           activeClassName="active"
-          className="display-center list-style-none"
+          // className="pagination-display-center list-style-none"
         />
       </Container>
 
