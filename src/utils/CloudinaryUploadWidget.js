@@ -13,7 +13,7 @@ function CloudinaryUploadWidget({ uwConfig, setFormData }) {
         const script = document.createElement('script');
         script.setAttribute('async', '');
         script.setAttribute('id', 'uw');
-        script.src = 'https://upload-widget.cloudinary.com/global/all.js';
+        script.src ='https://upload-widget.cloudinary.com/global/all.js';
         script.addEventListener('load', () => setLoaded(true));
         document.body.appendChild(script);
       } else {
