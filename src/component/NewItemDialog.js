@@ -1,10 +1,10 @@
-import React, { useState, useEffect } from 'react';
-import { Form, Modal, Button, Row, Col } from 'react-bootstrap';
-import CloudinaryUploadWidget from '../utils/CloudinaryUploadWidget';
-import { CATEGORY, STATUS, SIZE } from '../constants/product.constants';
-import '../style/adminProduct.style.css';
-import * as types from '../constants/product.constants';
-import { Cloudinary } from '@cloudinary/url-gen';
+import React, { useState, useEffect } from "react";
+import { Form, Modal, Button, Row, Col } from "react-bootstrap";
+import CloudinaryUploadWidget from "../utils/CloudinaryUploadWidget";
+import { CATEGORY, STATUS, SIZE } from "../constants/product.constants";
+import "../style/adminProduct.style.css";
+import * as types from "../constants/product.constants";
+import { image } from "@cloudinary/url-gen/qualifiers/source";
 import productStore from "../store/productStore";
 import useCommonUiStore from "../store/commonUiStore";
 
@@ -24,21 +24,10 @@ const NewItemDialog = ({ mode, showDialog, setShowDialog }) => {
   const [formData, setFormData] = useState(
     mode === "new" ? { ...InitialFormData } : "selectedProduct"
   );
-
-  const CLOUDINARY_CLOUD_NAME = process.env.REACT_APP_CLOUDINARY_CLOUD_NAME;
-  const CLOUDINARY_PRESET = process.env.REACT_APP_CLOUDINARY_PRESET;
-
   const [stock, setStock] = useState([]);
   const [stockError, setStockError] = useState(false);
   const { error, createProduct } = productStore();
-  const { showToastMessage } = useCommonUiStore();
-  const [cloudName] = useState(CLOUDINARY_CLOUD_NAME);
-  const [uploadPreset] = useState(CLOUDINARY_PRESET);
-
-  const [uwConfig] = useState({
-    cloudName,
-    uploadPreset,
-  });
+  const { showToastMessage } =useCommonUiStore();
   const handleClose = () => {
     //모든걸 초기화시키고;
     setFormData({ ...InitialFormData });
@@ -49,7 +38,9 @@ const NewItemDialog = ({ mode, showDialog, setShowDialog }) => {
 
   const handleSubmit = async (event) => {
       event.preventDefault();
-
+      // console.log("formData", formData);
+      // console.log("formData", stock);
+      
       if (stock.length === 0) return setStockError(true)
     
       const totalStock = stock.reduce((total, item)=>{
@@ -250,13 +241,14 @@ const NewItemDialog = ({ mode, showDialog, setShowDialog }) => {
 
         <Form.Group className="mb-3" controlId="Image" required>
           <Form.Label>Image</Form.Label>
-          <CloudinaryUploadWidget uwConfig={uwConfig} setFormData={setFormData} />
+          <CloudinaryUploadWidget uploadImage={uploadImage} />
+
           <img
-            id='uploadedimage'
+            id="uploadedimage"
             src={formData.image}
-            className='upload-image mt-2'
-            alt='uploadedimage'
-          ></img>
+            className="upload-image mt-2"
+            alt="uploadedimage"
+          />
         </Form.Group>
 
         <Row className="mb-3">
