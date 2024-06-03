@@ -6,13 +6,13 @@ import { productActions } from "../action/productAction";
 import NewItemDialog from "../component/NewItemDialog";
 import * as types from "../constants/product.constants";
 import ReactPaginate from "react-paginate";
-import { useSearchParams, useNavigate } from "react-router-dom";
+import { useSearchParams, useNavigate, useRouteError } from "react-router-dom";
 import ProductTable from "../component/ProductTable";
+import productStore from "../store/productStore";
 
 const AdminProduct = () => {
   const navigate = useNavigate();
   const [query, setQuery] = useSearchParams();
-  const dispatch = useDispatch();
   const [showDialog, setShowDialog] = useState(false);
   const [searchQuery, setSearchQuery] = useState({
     page: query.get("page") || 1,
@@ -20,7 +20,7 @@ const AdminProduct = () => {
   }); //검색 조건들을 저장하는 객체
 
   const [mode, setMode] = useState("new");
-
+  const { error, loading, getProductList, productList } = productStore();
   const tableHeader = [
     "#",
     "Sku",
@@ -33,6 +33,9 @@ const AdminProduct = () => {
   ];
 
   //상품리스트 가져오기 (url쿼리 맞춰서)
+  useEffect(()=>{
+    getProductList()
+  }, [productList])
 
   useEffect(() => {
     //검색어나 페이지가 바뀌면 url바꿔주기 (검색어또는 페이지가 바뀜 => url 바꿔줌=> url쿼리 읽어옴=> 이 쿼리값 맞춰서  상품리스트 가져오기)
@@ -75,7 +78,7 @@ const AdminProduct = () => {
 
         <ProductTable
           header={tableHeader}
-          data=""
+          data={productList}
           deleteItem={deleteItem}
           openEditForm={openEditForm}
         />
@@ -105,7 +108,7 @@ const AdminProduct = () => {
       <NewItemDialog
         mode={mode}
         showDialog={showDialog}
-        setShowDialog={showDialog}
+        setShowDialog={setShowDialog}
       />
     </div>
   );
