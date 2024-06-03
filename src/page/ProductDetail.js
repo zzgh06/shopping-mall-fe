@@ -5,7 +5,6 @@ import { useDispatch, useSelector } from "react-redux";
 import { productActions } from "../action/productAction";
 import { ColorRing } from "react-loader-spinner";
 import { cartActions } from "../action/cartAction";
-import { commonUiActions } from "../action/commonUiAction";
 import { currencyFormat } from "../utils/number";
 import "../style/productDetail.style.css";
 

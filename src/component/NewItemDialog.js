@@ -6,7 +6,6 @@ import { productActions } from "../action/productAction";
 import { CATEGORY, STATUS, SIZE } from "../constants/product.constants";
 import "../style/adminProduct.style.css";
 import * as types from "../constants/product.constants";
-import { commonUiActions } from "../action/commonUiAction";
 
 const InitialFormData = {
   name: "",

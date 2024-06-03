@@ -10,7 +10,6 @@ const store = configureStore({
     user: userReducer,
     product: productReducer,
     cart: cartReducer,
-    ui: commonUiReducer,
     order: orderReducer,
   },
 });

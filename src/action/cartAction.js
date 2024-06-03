@@ -1,6 +1,5 @@
 import api from "../utils/api";
 import * as types from "../constants/cart.constants";
-import { commonUiActions } from "../action/commonUiAction";
 const addToCart =
   ({ id, size }) =>
   async (dispatch) => {};

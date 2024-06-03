@@ -8,7 +8,6 @@ import OrderTable from "../component/OrderTable";
 import * as types from "../constants/order.constants";
 import ReactPaginate from "react-paginate";
 import { useSearchParams, useNavigate } from "react-router-dom";
-import { commonUiActions } from "../action/commonUiAction";
 
 const AdminOrderPage = () => {
   const navigate = useNavigate();

@@ -7,7 +7,6 @@ import NewItemDialog from "../component/NewItemDialog";
 import * as types from "../constants/product.constants";
 import ReactPaginate from "react-paginate";
 import { useSearchParams, useNavigate } from "react-router-dom";
-import { commonUiActions } from "../action/commonUiAction";
 import ProductTable from "../component/ProductTable";
 
 const AdminProduct = () => {
