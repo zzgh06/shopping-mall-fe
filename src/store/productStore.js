@@ -10,7 +10,6 @@ const productStore = create((set, get) => ({
     set({loading : true, error : ""});
     try {
       const response = await api.post('/product', formData);
-      // console.log(response)
       set({loading : false});
       return true;
     } catch (error){
@@ -18,12 +17,17 @@ const productStore = create((set, get) => ({
       return false;
     }
   },
-  getProductList : async () => {
+  getProductList : async (query) => {
     set({loading : true, error : ""});
+    console.log(query)
     try {
-      const response = await api.get('/product');
+      // 옵션으로 쿼리 추가
+      const response = await api.get('/product', {
+        params : {...query}
+      });
+      console.log(response)
       // console.log(response.data.products)
-      set({loading : true, error : "", productList : response.data.products});
+      set({loading : true, error : "", productList : response.data.productList});
     } catch (error){
       set({loading : false, error : error})
     }

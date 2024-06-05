@@ -36,13 +36,26 @@ const AdminProduct = () => {
     "",
   ];
 
+  // searchBox에서 검색어를 읽어온다 => 엔터를 치면 => searchQuery 객체가 업데이트 됨 { name : 제품명 }
+  // searchQuery 객체 안의 아이템 기준으로 url를 새로 생성해서 호출 => url 쿼리 읽어오기 
+  // => url 쿼리 기준으로 BE 검색조건과 함께 호출한다.
+  
   //상품리스트 가져오기 (url쿼리 맞춰서)
+  // 쿼리값을 옵션으로 백엔드에 전달
   useEffect(()=>{
-    getProductList()
-  }, [])
+    getProductList(searchQuery);
+  }, [query])
 
   useEffect(() => {
     //검색어나 페이지가 바뀌면 url바꿔주기 (검색어또는 페이지가 바뀜 => url 바꿔줌=> url쿼리 읽어옴=> 이 쿼리값 맞춰서  상품리스트 가져오기)
+    // 기본값이 "" 검색내용이 없으면 delete
+    if (searchQuery.name === ""){
+      delete searchQuery.name
+    }
+    // URLSearchParams 객체를 쿼리 형태로 변환
+    const params = new URLSearchParams(searchQuery);
+    const query = params.toString();
+    navigate("?" + query)
   }, [searchQuery]);
 
   //아이템 삭제하기
@@ -65,7 +78,6 @@ const AdminProduct = () => {
   const handlePageClick = ({ selected }) => {
     //  쿼리에 페이지값 바꿔주기
   };
-
   return (
     <div className="locate-center">
       <Container>
