@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import {useNavigate} from 'react-router-dom';
 import { Form, Modal, Button, Row, Col } from "react-bootstrap";
 import CloudinaryUploadWidget from "../utils/CloudinaryUploadWidget";
 import { CATEGORY, STATUS, SIZE } from "../constants/product.constants";
@@ -19,15 +20,14 @@ const InitialFormData = {
   price: 0,
 };
 const NewItemDialog = ({ mode, showDialog, setShowDialog }) => {
-  // const selectedProduct = useSelector((state) => state.product.selectedProduct);
-  // const { error } = useSelector((state) => state.product);
+  const { error, createProduct } = productStore();
+  const { showToastMessage } =useCommonUiStore();
   const [formData, setFormData] = useState(
-    mode === "new" ? { ...InitialFormData } : "selectedProduct"
+    mode === "new" ? { ...InitialFormData } : {}
   );
   const [stock, setStock] = useState([]);
   const [stockError, setStockError] = useState(false);
-  const { error, createProduct } = productStore();
-  const { showToastMessage } =useCommonUiStore();
+  
   const handleClose = () => {
     //모든걸 초기화시키고;
     setFormData({ ...InitialFormData });

@@ -12,8 +12,6 @@ class CloudinaryUploadWidget extends Component {
       {
         cloudName: CLOUDNAME,
         uploadPreset: UPLOADPRESET,
-        // cloudinary settings
-        // Set additional options if necessary
       },
       (error, result) => {
         if (!error && result && result.event === "success") {
@@ -22,10 +20,8 @@ class CloudinaryUploadWidget extends Component {
             .getElementById("uploadedimage")
             .setAttribute("src", result.info.secure_url);
           this.props.uploadImage(result.info.secure_url);
-        } else if (error) {
-          console.error("Error uploading image: ", error);
         }
-      }
+      } //https://cloudinary.com/documentation/react_image_and_video_upload
     );
     document.getElementById("upload_widget").addEventListener(
       "click",

@@ -13,6 +13,8 @@ import productStore from "../store/productStore";
 const AdminProduct = () => {
   const navigate = useNavigate();
   const [query, setQuery] = useSearchParams();
+
+  // 다이얼로그
   const [showDialog, setShowDialog] = useState(false);
   const [searchQuery, setSearchQuery] = useState({
     page: query.get("page") || 1,
@@ -20,6 +22,8 @@ const AdminProduct = () => {
   }); //검색 조건들을 저장하는 객체
 
   const [mode, setMode] = useState("new");
+  
+  // zustand : productStore
   const { error, loading, getProductList, productList } = productStore();
   const tableHeader = [
     "#",
@@ -41,8 +45,9 @@ const AdminProduct = () => {
     //검색어나 페이지가 바뀌면 url바꿔주기 (검색어또는 페이지가 바뀜 => url 바꿔줌=> url쿼리 읽어옴=> 이 쿼리값 맞춰서  상품리스트 가져오기)
   }, [searchQuery]);
 
+  //아이템 삭제하기
   const deleteItem = (id) => {
-    //아이템 삭제하가ㅣ
+    
   };
 
   const openEditForm = (product) => {
