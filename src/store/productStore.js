@@ -6,6 +6,7 @@ const productStore = create((set, get) => ({
   loading: false,
   error: "",
   productList : [],
+  totalPageNumber : 1,
   createProduct : async (formData) => {
     set({loading : true, error : ""});
     try {
@@ -25,9 +26,9 @@ const productStore = create((set, get) => ({
       const response = await api.get('/product', {
         params : {...query}
       });
-      console.log(response)
+      // console.log(response)
       // console.log(response.data.products)
-      set({loading : true, error : "", productList : response.data.productList});
+      set({loading : true, error : "", productList : response.data.data, totalPageNumber : response.data.totalPageNumber});
     } catch (error){
       set({loading : false, error : error})
     }

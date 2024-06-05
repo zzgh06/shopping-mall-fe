@@ -24,7 +24,7 @@ const AdminProduct = () => {
   const [mode, setMode] = useState("new");
   
   // zustand : productStore
-  const { error, loading, getProductList, productList } = productStore();
+  const { error, loading, getProductList, productList, totalPageNumber } = productStore();
   const tableHeader = [
     "#",
     "Sku",
@@ -76,7 +76,9 @@ const AdminProduct = () => {
   };
 
   const handlePageClick = ({ selected }) => {
-    //  쿼리에 페이지값 바꿔주기
+    //  쿼리에 페이지 값 바꿔주기
+    setSearchQuery({...searchQuery, page : selected + 1})
+    // console.log(selected) // 현재 페이지 + 1
   };
   return (
     <div className="locate-center">
@@ -103,8 +105,8 @@ const AdminProduct = () => {
           nextLabel="next >"
           onPageChange={handlePageClick}
           pageRangeDisplayed={5}
-          pageCount={100}
-          forcePage={2} // 1페이지면 2임 여긴 한개씩 +1 해야함
+          pageCount={totalPageNumber} // 전체페이지
+          forcePage={searchQuery.page - 1} // 1페이지면 2임 여긴 한개씩 +1 해야함
           previousLabel="< previous"
           renderOnZeroPageCount={null}
           pageClassName="page-item"
