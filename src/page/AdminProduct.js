@@ -24,7 +24,7 @@ const AdminProduct = () => {
   const [mode, setMode] = useState("new");
   
   // zustand : productStore
-  const { error, loading, getProductList, productList, totalPageNumber } = productStore();
+  const { error, loading, getProductList, productList, totalPageNumber, setSelectedProduct } = productStore();
   const tableHeader = [
     "#",
     "Sku",
@@ -65,14 +65,17 @@ const AdminProduct = () => {
 
   const openEditForm = (product) => {
     //edit모드로 설정하고
+    setMode('edit')
     // 아이템 수정다이얼로그 열어주기
+    setSelectedProduct(product);
+    setShowDialog(true)
   };
 
   const handleClickNewItem = () => {
     //new 모드로 설정하고
-    setMode("new")
+    setMode("new");
     // 다이얼로그 열어주기
-    setShowDialog(true)
+    setShowDialog(true);
   };
 
   const handlePageClick = ({ selected }) => {
