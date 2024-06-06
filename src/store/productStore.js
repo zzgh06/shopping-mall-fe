@@ -23,7 +23,7 @@ const productStore = create((set, get) => ({
   // 상품정보 가져오기
   getProductList : async (query) => {
     set({loading : true, error : ""});
-    // console.log(query)
+    // console.log('qqq',query)
     try {
       // 옵션으로 쿼리 추가
       const response = await api.get('/product', {
@@ -47,6 +47,17 @@ const productStore = create((set, get) => ({
     try {
       const response = await api.put(`/product/${id}`, formData);
       set({loading : false, error : ""});
+      return true;
+    } catch(error) {
+      set({loading : false, error : error });
+      return false;
+    }
+  },
+  // 상품 삭제하기
+  deleteProduct : async (id) => {
+    set({loading : true, error : ""});
+    try {
+      const response = await api.delete(`/product/${id}`);
       return true;
     } catch(error) {
       set({loading : false, error : error });

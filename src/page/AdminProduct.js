@@ -9,8 +9,10 @@ import ReactPaginate from "react-paginate";
 import { useSearchParams, useNavigate, useRouteError } from "react-router-dom";
 import ProductTable from "../component/ProductTable";
 import productStore from "../store/productStore";
+import useCommonUiStore from "../store/commonUiStore";
 
 const AdminProduct = () => {
+  
   const navigate = useNavigate();
   const [query, setQuery] = useSearchParams();
 
@@ -24,7 +26,8 @@ const AdminProduct = () => {
   const [mode, setMode] = useState("new");
   
   // zustand : productStore
-  const { error, loading, getProductList, productList, totalPageNumber, setSelectedProduct } = productStore();
+  const { error, loading, getProductList, productList, totalPageNumber, setSelectedProduct, deleteProduct } = productStore();
+  const { showToastMessage } = useCommonUiStore();
   const tableHeader = [
     "#",
     "Sku",
@@ -60,9 +63,16 @@ const AdminProduct = () => {
 
   //아이템 삭제하기
   const deleteItem = (id) => {
-    
+    const success = deleteProduct(id);
+    if (!success) {
+      showToastMessage('상품삭제실패', 'error');
+  } else {
+      showToastMessage('상품삭제성공', 'success');
+      getProductList({page: 1, name : ""})
+  }
   };
 
+  // 수정 폼 및 선택한 상품의 정보 불러오기
   const openEditForm = (product) => {
     //edit모드로 설정하고
     setMode('edit')
@@ -71,6 +81,7 @@ const AdminProduct = () => {
     setShowDialog(true)
   };
 
+  // 생품 생성 폼 열기
   const handleClickNewItem = () => {
     //new 모드로 설정하고
     setMode("new");
