@@ -1,20 +1,19 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { Container, Row, Col, Button, Dropdown } from "react-bootstrap";
-import { useDispatch, useSelector } from "react-redux";
-import { productActions } from "../action/productAction";
 import { ColorRing } from "react-loader-spinner";
 import { cartActions } from "../action/cartAction";
 import { currencyFormat } from "../utils/number";
 import "../style/productDetail.style.css";
+import productStore from "../store/productStore";
 
 const ProductDetail = () => {
-  const dispatch = useDispatch();
-
+  const {selectedProduct} = productStore();
   const [size, setSize] = useState("");
   const { id } = useParams();
   const [sizeError, setSizeError] = useState(false);
 
+  
   const navigate = useNavigate();
 
   const addItemToCart = () => {
