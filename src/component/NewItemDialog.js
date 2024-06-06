@@ -67,8 +67,8 @@ const NewItemDialog = ({ mode, showDialog, setShowDialog, searchQuery, setSearch
               // handlePageClick를 통해 searchQuery에 현재 페이지 값 전달하고 있기 때문에
               // 수정할 아이템이 있는 페이지의 ProductList를 불러옴
               getProductList(searchQuery);
+              setShowDialog(false)
           }
-          setShowDialog(false)
       }
   };
 
