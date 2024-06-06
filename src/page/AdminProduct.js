@@ -62,14 +62,15 @@ const AdminProduct = () => {
   }, [searchQuery]);
 
   //아이템 삭제하기
-  const deleteItem = (id) => {
-    const success = deleteProduct(id);
+  const deleteItem = async (id) => {
+    const success = await deleteProduct(id, navigate);
     if (!success) {
       showToastMessage('상품삭제실패', 'error');
-  } else {
+    } else {
       showToastMessage('상품삭제성공', 'success');
-      getProductList({page: 1, name : ""})
-  }
+      // 현재 페이지에 해당하는 아이템 정보를 불러옴
+      getProductList(searchQuery)
+    }
   };
 
   // 수정 폼 및 선택한 상품의 정보 불러오기
@@ -142,6 +143,8 @@ const AdminProduct = () => {
         mode={mode}
         showDialog={showDialog}
         setShowDialog={setShowDialog}
+        searchQuery={searchQuery}
+        setSearchQuery={setSearchQuery}
       />
     </div>
   );

@@ -23,7 +23,7 @@ const productStore = create((set, get) => ({
   // 상품정보 가져오기
   getProductList : async (query) => {
     set({loading : true, error : ""});
-    // console.log('qqq',query)
+    console.log('qqq',query)
     try {
       // 옵션으로 쿼리 추가
       const response = await api.get('/product', {

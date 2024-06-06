@@ -19,8 +19,8 @@ const InitialFormData = {
   status: "active",
   price: 0,
 };
-const NewItemDialog = ({ mode, showDialog, setShowDialog }) => {
-  const { error, createProduct, selectedProduct, editProduct, getProductList } = productStore();
+const NewItemDialog = ({ mode, showDialog, setShowDialog, searchQuery, setSearchQuery }) => {
+  const { error, createProduct, selectedProduct, editProduct, getProductList, totalPageNumber } = productStore();
   const { showToastMessage } = useCommonUiStore();
   const [formData, setFormData] = useState(
     mode === "new" ? { ...InitialFormData } : selectedProduct
@@ -54,7 +54,8 @@ const NewItemDialog = ({ mode, showDialog, setShowDialog }) => {
           } else {
               showToastMessage('상품생성완료', 'success');
               handleClose();
-              getProductList({page: 1, name : ""})
+              // 상품 생성시 마지막 페이지로 이동
+              setSearchQuery({ page: totalPageNumber, name: "" });
           }
       } else {
           // 상품 수정하기
@@ -63,7 +64,9 @@ const NewItemDialog = ({ mode, showDialog, setShowDialog }) => {
               showToastMessage('상품수정실패', 'error');
           } else {
               showToastMessage('상품수정완료', 'success');
-              getProductList({page: 1, name : ""})
+              // handlePageClick를 통해 searchQuery에 현재 페이지 값 전달하고 있기 때문에
+              // 수정할 아이템이 있는 페이지의 ProductList를 불러옴
+              getProductList(searchQuery);
           }
           setShowDialog(false)
       }
