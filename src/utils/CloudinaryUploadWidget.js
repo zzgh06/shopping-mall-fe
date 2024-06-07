@@ -12,7 +12,7 @@ class CloudinaryUploadWidget extends Component {
       {
         cloudName: CLOUDNAME,
         uploadPreset: UPLOADPRESET,
-        multiple: true
+        multiple: true // 이미지 여러장
       },
       (error, result) => {
         if (!error && result && result.event === "success") {

@@ -7,9 +7,15 @@ import { currencyFormat } from "../utils/number";
 import { RotatingLines } from "react-loader-spinner";
 import "../style/productDetail.style.css";
 import productStore from "../store/productStore";
+import userStore from "../store/userStore";
+import cartStore from "../store/cartStore";
+import useCommonUiStore from "../store/commonUiStore";
 
 const ProductDetail = () => {
-  const {loading, selectedProduct, getProductDetail} = productStore();
+  const { loading, selectedProduct, getProductDetail } = productStore();
+  const { addToCart } = cartStore();
+  const { showToastMessage } = useCommonUiStore();
+  const { user } = userStore();
   const [size, setSize] = useState("");
   const { id } = useParams();
   const [sizeError, setSizeError] = useState(false);
@@ -21,13 +27,28 @@ const ProductDetail = () => {
   }, [id]);
   
 
-  const addItemToCart = () => {
-    //사이즈를 아직 선택안했다면 에러
+  const addItemToCart = async () => {
+    // 사이즈를 아직 선택안했다면 에러
+    if (size === "") {
+      setSizeError(true);
+      return
+    }
     // 아직 로그인을 안한유저라면 로그인페이지로
+    if (!user) {
+      navigate('/login')
+      showToastMessage('카트에 상품을 추가하기 위해서는 로그인이 필요합니다.', 'error');
+    };
     // 카트에 아이템 추가하기
+    const success = await addToCart({id, size});
+    if (success) {
+      showToastMessage('카트에 상품을 추가하였습니다.', 'success');
+    }
   };
+
+  // 사이즈 선택
   const selectSize = (value) => {
     // 사이즈 추가하기
+    if(sizeError) setSizeError(false)
     setSize(value)
   };
 

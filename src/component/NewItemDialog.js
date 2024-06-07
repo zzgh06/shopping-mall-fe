@@ -9,6 +9,7 @@ import { image } from "@cloudinary/url-gen/qualifiers/source";
 import productStore from "../store/productStore";
 import useCommonUiStore from "../store/commonUiStore";
 
+// images 배열로 변경
 const InitialFormData = {
   name: "",
   sku: "",

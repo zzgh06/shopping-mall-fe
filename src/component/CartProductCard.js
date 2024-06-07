@@ -2,19 +2,26 @@ import React from "react";
 import { faTrash } from "@fortawesome/free-solid-svg-icons";
 import { Row, Col, Form } from "react-bootstrap";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { useDispatch } from "react-redux";
 import { cartActions } from "../action/cartAction";
 import { currencyFormat } from "../utils/number";
+import useCommonUiStore from "../store/commonUiStore";
 
-const CartProductCard = ({ item }) => {
-  const dispatch = useDispatch();
-
+const CartProductCard = ({ item, deleteCartItem, getCartList }) => {
+  console.log('item',item)
+  const {showToastMessage} = useCommonUiStore();
   const handleQtyChange = () => {
     //아이템 수량을 수정한다
   };
 
-  const deleteCart = (id) => {
+  const deleteCart = async (id) => {
     //아이템을 지운다
+    const success = await deleteCartItem(id);
+    if (!success) {
+      showToastMessage('상품삭제실패', 'error');
+    } else {
+      showToastMessage('상품삭제성공', 'success');
+      getCartList();
+    }
   };
 
   return (
@@ -22,27 +29,27 @@ const CartProductCard = ({ item }) => {
       <Row>
         <Col md={2} xs={12}>
           <img
-            src="https://lp2.hm.com/hmgoepprod?set=quality%5B79%5D%2Csource%5B%2Fb3%2F10%2Fb310d46e8f33571ea44cc4facf3cd224a90ef3d4.jpg%5D%2Corigin%5Bdam%5D%2Ccategory%5B%5D%2Ctype%5BLOOKBOOK%5D%2Cres%5Bm%5D%2Chmver%5B1%5D&call=url[file:/product/main]"
-            width={112}
+            src={item?.productId.images[0]}
+            width={112} alt={item?.productId.name}
           />
         </Col>
         <Col md={10} xs={12}>
           <div className="display-flex space-between">
-            <h3>리넨셔츠</h3>
+            <h3>{item?.productId.name}</h3>
             <button className="trash-button">
               <FontAwesomeIcon
                 icon={faTrash}
                 width={24}
-                onClick={() => deleteCart("hard_code")}
+                onClick={() => deleteCart(item._id)}
               />
             </button>
           </div>
 
           <div>
-            <strong>₩ 45,000</strong>
+            <strong>₩ {currencyFormat(item?.productId.price)}</strong>
           </div>
-          <div>Size: Menu</div>
-          <div>Total: ₩ 45,000</div>
+          <div>Size: {item?.size.toUpperCase()}</div>
+          <div>Total: ₩ {currencyFormat(item?.productId.price * item?.qty)}</div>
           <div>
             Quantity:
             <Form.Select

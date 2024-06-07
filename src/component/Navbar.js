@@ -11,10 +11,11 @@ import { Link } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import userStore from "../store/userStore";
+import cartStore from "../store/cartStore";
 
 const Navbar = ({ user }) => {
   const dispatch = useDispatch();
-  const { cartItemCount } = useSelector((state) => state.cart);
+  const { cartItemQty } = cartStore()
   const { userLogout } = userStore(); // 유저 스토어
   const isMobile = window.navigator.userAgent.indexOf("Mobile") !== -1;
   const [showSearchBox, setShowSearchBox] = useState(false);
@@ -41,7 +42,7 @@ const Navbar = ({ user }) => {
   const logout = () => {
     userLogout();
   };
-
+  console.log(cartItemQty)
   return (
     <div>
       {showSearchBox && (
@@ -104,7 +105,7 @@ const Navbar = ({ user }) => {
               <FontAwesomeIcon icon={faShoppingBag} />
               {!isMobile && (
                 <span style={{ cursor: "pointer" }}>{`쇼핑백(${
-                  cartItemCount || 0
+                  0
                 })`}</span>
               )}
             </div>

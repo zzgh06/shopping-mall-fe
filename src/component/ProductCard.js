@@ -8,7 +8,7 @@ const ProductCard = ({item}) => {
     // 상품 디테일 페이지로 가기
     navigate(`/product/${id}`)
   };
-  console.log('iii', item)
+  // console.log('iii', item)
   return (
     <div className="card" onClick={() => showProduct(item?._id)}>
       <img
