@@ -13,6 +13,7 @@ const productStore = create((set, get) => ({
     set({loading : true, error : ""});
     try {
       const response = await api.post('/product', formData);
+      console.log(response)
       set({loading : false, error : ""});
       return true;
     } catch (error){
@@ -23,7 +24,7 @@ const productStore = create((set, get) => ({
   // 상품정보 가져오기
   getProductList : async (query) => {
     set({loading : true, error : ""});
-    console.log('qqq',query)
+    // console.log('qqq',query)
     try {
       // 옵션으로 쿼리 추가
       const response = await api.get('/product', {
@@ -31,14 +32,24 @@ const productStore = create((set, get) => ({
       });
       // console.log(response)
       // console.log(response.data.products)
-      set({loading : true, error : "", productList : response.data.data, totalPageNumber : response.data.totalPageNumber});
+      set({loading : false, error : "", productList : response.data.data, totalPageNumber : response.data.totalPageNumber});
     } catch (error){
+      set({loading : false, error : error})
+    }
+  },
+  getProductDetail : async (id) => {
+    set({loading : true, error : ""});
+    try {
+      const response = await api.get(`/product/${id}`);
+      // console.log(response.data.data)
+      set({loading : false, selectedProduct : response?.data.data});
+    } catch(error){
       set({loading : false, error : error})
     }
   },
   // 선택한 상품 정보 불러오기
   setSelectedProduct : (product) => {
-    console.log(product)
+    // console.log(product)
     set({selectedProduct : product});
   },
   // 상품 수정하기

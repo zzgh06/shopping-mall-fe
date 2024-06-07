@@ -3,6 +3,7 @@ import Button from "react-bootstrap/Button";
 import Table from "react-bootstrap/Table";
 import { currencyFormat } from "../utils/number";
 const ProductTable = ({ header, data, deleteItem, openEditForm }) => {
+  console.log(data)
   return (
     <div className="overflow-x">
       <Table striped bordered hover>
@@ -29,7 +30,7 @@ const ProductTable = ({ header, data, deleteItem, openEditForm }) => {
                   ))}
                 </th>
                 <th>
-                  <img src={item.image} width={100} alt="image" />
+                  {item?.images && item.images.map((photo)=><img src={photo} width={100} alt="image" />)}
                 </th>
                 <th>{item.status}</th>
                 <th style={{ minWidth: "100px" }}>

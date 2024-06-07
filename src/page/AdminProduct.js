@@ -34,7 +34,7 @@ const AdminProduct = () => {
     "Name",
     "Price",
     "Stock",
-    "Image",
+    "Images",
     "Status",
     "",
   ];

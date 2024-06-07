@@ -13,7 +13,7 @@ const InitialFormData = {
   name: "",
   sku: "",
   stock: {},
-  image: "",
+  images: [],
   description: "",
   category: [],
   status: "active",
@@ -27,7 +27,7 @@ const NewItemDialog = ({ mode, showDialog, setShowDialog, searchQuery, setSearch
   );
   const [stock, setStock] = useState([]);
   const [stockError, setStockError] = useState(false);
-  
+  console.log(formData)
   const handleClose = () => {
     //모든걸 초기화시키고;
     setFormData({ ...InitialFormData });
@@ -125,9 +125,13 @@ const NewItemDialog = ({ mode, showDialog, setShowDialog, searchQuery, setSearch
     }
   };
 
+  // 이미지 업로드
   const uploadImage = (url) => {
-    //이미지 업로드
-    setFormData({...formData, image : url})
+    // 이미지 URL을 배열에 추가
+    setFormData((prevData) => ({
+      ...prevData,
+      images: [...prevData?.images, url]
+    }));
   };
 
   useEffect(() => {
@@ -259,17 +263,20 @@ const NewItemDialog = ({ mode, showDialog, setShowDialog, searchQuery, setSearch
           </div>
         </Form.Group>
 
+        <Form className="form-container" onSubmit={handleSubmit}>
+        {/* Other form groups */}
         <Form.Group className="mb-3" controlId="Image" required>
-          <Form.Label>Image</Form.Label>
+          <Form.Label>Images</Form.Label>
           <CloudinaryUploadWidget uploadImage={uploadImage} />
 
-          <img
-            id="uploadedimage"
-            src={formData.image}
-            className="upload-image mt-2"
-            alt="uploadedimage"
-          />
+          <div className="uploaded-images mt-2">
+            {formData?.images.map((url, index) => (
+              <img key={index} src={url} className="upload-image" alt={`uploaded ${index}`} />
+            ))}
+          </div>
         </Form.Group>
+        {/* Other form groups */}
+      </Form>
 
         <Row className="mb-3">
           <Form.Group as={Col} controlId="price">
