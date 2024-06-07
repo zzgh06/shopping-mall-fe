@@ -30,13 +30,13 @@ const Login = () => {
     // 구글로 로그인 하기
   };
 
-  if (loading){
-    return (
-      <div className="loading-container">
-        <ClipLoader color="#11111" loading={loading} size={150} aria-label="Loading Spinner"/>
-      </div>
-    )
-  }
+  // if (loading){
+  //   return (
+  //     <div className="loading-container">
+  //       <ClipLoader color="#11111" loading={loading} size={150} aria-label="Loading Spinner"/>
+  //     </div>
+  //   )
+  // }
 
   if (user) {
     navigate("/");
