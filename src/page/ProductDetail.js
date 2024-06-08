@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import { Container, Row, Col, Button, Dropdown } from "react-bootstrap";
+import { Container, Row, Col, Button, Dropdown, Modal } from "react-bootstrap";
 import { ColorRing } from "react-loader-spinner";
 import { cartActions } from "../action/cartAction";
 import { currencyFormat } from "../utils/number";
@@ -13,18 +13,26 @@ import useCommonUiStore from "../store/commonUiStore";
 
 const ProductDetail = () => {
   const { loading, selectedProduct, getProductDetail } = productStore();
-  const { addToCart } = cartStore();
+  const { addToCart, error } = cartStore();
   const { showToastMessage } = useCommonUiStore();
   const { user } = userStore();
   const [size, setSize] = useState("");
   const { id } = useParams();
   const [sizeError, setSizeError] = useState(false);
+  const [showModal, setShowModal] = useState(false);
   const navigate = useNavigate();
   
   useEffect(() => {
     //상품 디테일 정보 가져오기
     getProductDetail(id);
   }, [id]);
+
+  // error 메세지가 있거나 "" 빈문자열이 아닐때, 에러메세지
+  useEffect(()=>{
+    if (error && error !== "") {
+      showToastMessage(error, 'error');
+    }
+  }, [error, showToastMessage])
   
 
   const addItemToCart = async () => {
@@ -37,12 +45,23 @@ const ProductDetail = () => {
     if (!user) {
       navigate('/login')
       showToastMessage('카트에 상품을 추가하기 위해서는 로그인이 필요합니다.', 'error');
+      return;
     };
     // 카트에 아이템 추가하기
     const success = await addToCart({id, size});
     if (success) {
       showToastMessage('카트에 상품을 추가하였습니다.', 'success');
+      setShowModal(true);
     }
+  };
+
+  // 모달닫기
+  const handleCloseModal = () => setShowModal(false);
+
+  // 카트로 이동
+  const handleGoToCart = () => {
+    setShowModal(false);
+    navigate('/cart');
   };
 
   // 사이즈 선택
@@ -51,6 +70,7 @@ const ProductDetail = () => {
     if(sizeError) setSizeError(false)
     setSize(value)
   };
+
 
   //카트에러가 있으면 에러메세지 보여주기
 
@@ -130,6 +150,22 @@ const ProductDetail = () => {
       </Row>
     </Container>
     )}
+    <Modal show={showModal} onHide={handleCloseModal}>
+      <Modal.Header closeButton>
+        <Modal.Title>카트에 상품이 추가되었습니다.</Modal.Title>
+      </Modal.Header>
+      <Modal.Body>
+        카트로 이동하시겠습니까, 아니면 계속 쇼핑하시겠습니까?
+      </Modal.Body>
+      <Modal.Footer>
+        <Button variant="secondary" onClick={handleCloseModal}>
+          계속 쇼핑
+        </Button>
+        <Button variant="primary" onClick={handleGoToCart}>
+          카트로 이동
+        </Button>
+      </Modal.Footer>
+    </Modal>
     </div>
   );
 };

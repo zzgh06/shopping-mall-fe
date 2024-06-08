@@ -20,7 +20,7 @@ const cartStore = create((set, get) => ({
       });
       return true;
     } catch (error) {
-      set({ loading: false, error: error });
+      set({ loading: false, error: error.error });
       return false;
     }
   },
