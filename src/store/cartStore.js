@@ -4,7 +4,6 @@ import api from "../utils/api";
 const cartStore = create((set, get) => ({
   loading: false,
   error: "",
-  cartItemQty: 0,
   cartList: [],
   totalPrice: 0,
   cartItemCount: 0,
@@ -16,7 +15,7 @@ const cartStore = create((set, get) => ({
       set({
         loading: false,
         error: "",
-        cartItemQty: response.data.cartItemQty,
+        cartItemCount: response.data.cartItemQty,
       });
       return true;
     } catch (error) {
@@ -52,7 +51,20 @@ const cartStore = create((set, get) => ({
       set({ loading: false, error: error });
       return false;
     }
-  }
+  },
+  updateQty : async (id, value) => {
+    set({ loading: true, error: "" });
+    try {
+      // { qty : value} 백엔드에는 req.body 에 qty로 전달되고 있어 이런식으로 변경해서 보내야함
+      const response = await api.put(`/cart/${id}`, { qty : value});
+      // console.log('rrr', response.data.data)
+      set({ loading: false, error: "",  cartItemCount : response.data.data});
+      return true;
+    } catch(error){
+      set({ loading: false, error: error });
+      return false;
+    }
+  },
 }));
 
 export default cartStore;

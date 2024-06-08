@@ -6,13 +6,23 @@ import { cartActions } from "../action/cartAction";
 import { currencyFormat } from "../utils/number";
 import useCommonUiStore from "../store/commonUiStore";
 
-const CartProductCard = ({ item, deleteCartItem, getCartList }) => {
+const CartProductCard = ({ item, deleteCartItem, getCartList, updateQty }) => {
   console.log('item',item)
   const {showToastMessage} = useCommonUiStore();
-  const handleQtyChange = () => {
+  const handleQtyChange = async (id, event) => {
     //아이템 수량을 수정한다
+    const value = event.target.value;
+    // console.log(id, value)
+    const success = await updateQty(id, value);
+    if (!success) {
+      showToastMessage('상품 수량 변경에 실패하였습니다', 'error');
+    } else {
+      showToastMessage('상품 수량 변경 성공', 'success');
+      getCartList();
+    }
   };
 
+  // 카트 아이템 삭제
   const deleteCart = async (id) => {
     //아이템을 지운다
     const success = await deleteCartItem(id);
@@ -53,9 +63,9 @@ const CartProductCard = ({ item, deleteCartItem, getCartList }) => {
           <div>
             Quantity:
             <Form.Select
-              onChange={(event) => handleQtyChange()}
+              onChange={(event) => handleQtyChange(item._id, event)}
               required
-              defaultValue={1}
+              defaultValue={item.qty}
               className="qty-dropdown"
             >
               <option value={1}>1</option>

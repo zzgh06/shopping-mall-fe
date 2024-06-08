@@ -30,6 +30,10 @@
     margin-bottom: 20px;
 }
 
+.receipt-quantity {
+    font-size: 11px;
+    color: rgb(130, 130, 130);
+}
 .payment-button{
    width: 100%;
    padding: 16px;

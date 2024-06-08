@@ -34,7 +34,7 @@ const ProductDetail = () => {
     }
   }, [error, showToastMessage])
   
-
+  // 카트에 아이템 담기
   const addItemToCart = async () => {
     // 사이즈를 아직 선택안했다면 에러
     if (size === "") {

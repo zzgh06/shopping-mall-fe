@@ -7,8 +7,8 @@ import OrderReceipt from "../component/OrderReceipt";
 import "../style/cart.style.css";
 
 const CartPage = () => {
-  const { loading, getCartList, cartList, totalPrice, deleteCartItem } =
-    cartStore();
+  const { loading, getCartList, cartList, totalPrice, deleteCartItem, updateQty} = cartStore();
+  console.log('ccc', cartList)
   useEffect(() => {
     //카트리스트 불러오기
     getCartList();
@@ -25,6 +25,7 @@ const CartPage = () => {
                   item={item}
                   deleteCartItem={deleteCartItem}
                   getCartList={getCartList}
+                  updateQty={updateQty}
                   key={item._id}
                 />
               ))}
