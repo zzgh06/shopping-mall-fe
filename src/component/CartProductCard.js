@@ -1,12 +1,13 @@
-import React from "react";
+import React, {useState} from "react";
 import { faTrash } from "@fortawesome/free-solid-svg-icons";
-import { Row, Col, Form } from "react-bootstrap";
+import { Row, Col, Form, Modal, Button } from "react-bootstrap";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { currencyFormat } from "../utils/number";
 import useCommonUiStore from "../store/commonUiStore";
 
 const CartProductCard = ({ item, deleteCartItem, getCartList, updateQty }) => {
   // console.log('item',item)
+  const [showModal, setShowModal] = useState(false);
   const {showToastMessage} = useCommonUiStore();
   const handleQtyChange = async (id, event) => {
     //아이템 수량을 수정한다
@@ -21,6 +22,9 @@ const CartProductCard = ({ item, deleteCartItem, getCartList, updateQty }) => {
     }
   };
 
+  const handleCloseModal = () => setShowModal(false); 
+  const handleOpenModal = () => setShowModal(true);
+
   // 카트 아이템 삭제
   const deleteCart = async (id) => {
     //아이템을 지운다
@@ -29,11 +33,13 @@ const CartProductCard = ({ item, deleteCartItem, getCartList, updateQty }) => {
       showToastMessage('상품삭제실패', 'error');
     } else {
       showToastMessage('상품삭제성공', 'success');
+      setShowModal(false);
       getCartList();
     }
   };
 
   return (
+    <>
     <div className="product-card-cart">
       <Row>
         <Col md={2} xs={12}>
@@ -49,7 +55,7 @@ const CartProductCard = ({ item, deleteCartItem, getCartList, updateQty }) => {
               <FontAwesomeIcon
                 icon={faTrash}
                 width={24}
-                onClick={() => deleteCart(item._id)}
+                onClick={() => handleOpenModal()}
               />
             </button>
           </div>
@@ -82,6 +88,23 @@ const CartProductCard = ({ item, deleteCartItem, getCartList, updateQty }) => {
         </Col>
       </Row>
     </div>
+    <Modal show={showModal} onHide={handleCloseModal}>
+      <Modal.Header closeButton>
+        <Modal.Title>카트에서 선택하신 상품을 삭제하시겠습니까?</Modal.Title>
+      </Modal.Header>
+      <Modal.Body>
+        상품을 삭제하시겠습니까, 카트페이지로 돌아가시겠습니까?
+      </Modal.Body>
+      <Modal.Footer>
+        <Button variant="secondary" onClick={handleCloseModal}>
+          돌아가기
+        </Button>
+        <Button variant="primary" onClick={() => deleteCart(item._id)}>
+          삭제하기
+        </Button>
+      </Modal.Footer>
+    </Modal>
+    </>
   );
 };
 

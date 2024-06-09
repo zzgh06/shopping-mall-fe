@@ -1,18 +1,37 @@
 import React from "react";
 import { useEffect } from "react";
 import { Container, Row, Col } from "react-bootstrap";
+import { RotatingLines } from "react-loader-spinner";
 import cartStore from "../store/cartStore";
 import CartProductCard from "../component/CartProductCard";
 import OrderReceipt from "../component/OrderReceipt";
 import "../style/cart.style.css";
 
 const CartPage = () => {
-  const { getCartList, cartList, totalPrice, deleteCartItem, updateQty} = cartStore();
+  const { loading, getCartList, cartList, totalPrice, deleteCartItem, updateQty} = cartStore();
   // console.log('ccc', cartList)
   useEffect(() => {
     //카트리스트 불러오기
     getCartList();
   }, []);
+
+  if (loading) {
+    return (
+      <div className="loading-container">
+        <RotatingLines
+          visible={true}
+          height="150"
+          width="150"
+          color="grey"
+          strokeWidth="5"
+          animationDuration="0.75"
+          ariaLabel="rotating-lines-loading"
+          wrapperStyle={{}}
+          wrapperClass=""
+        />
+      </div>
+    );
+  }
 
   return (
     <Container>
