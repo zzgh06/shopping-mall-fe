@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faUser } from "@fortawesome/free-regular-svg-icons";
 import {
@@ -9,16 +9,16 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import { Link } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
-import { useDispatch, useSelector } from "react-redux";
+
 import userStore from "../store/userStore";
 import cartStore from "../store/cartStore";
 
 const Navbar = ({ user }) => {
-  const dispatch = useDispatch();
-  const { cartItemQty } = cartStore()
+  const { cartItemCount, clearCart } = cartStore();
   const { userLogout } = userStore(); // 유저 스토어
   const isMobile = window.navigator.userAgent.indexOf("Mobile") !== -1;
   const [showSearchBox, setShowSearchBox] = useState(false);
+
   const menuList = [
     "여성",
     "Divided",
@@ -29,8 +29,10 @@ const Navbar = ({ user }) => {
     "Sale",
     "지속가능성",
   ];
+
   let [width, setWidth] = useState(0);
   let navigate = useNavigate();
+
   const onCheckEnter = (event) => {
     if (event.key === "Enter") {
       if (event.target.value === "") {
@@ -41,8 +43,11 @@ const Navbar = ({ user }) => {
   };
   const logout = () => {
     userLogout();
+    // 로그아웃시 카트 초기화
+    clearCart();
+    navigate("/");
   };
-  console.log(cartItemQty)
+
   return (
     <div>
       {showSearchBox && (
@@ -105,7 +110,7 @@ const Navbar = ({ user }) => {
               <FontAwesomeIcon icon={faShoppingBag} />
               {!isMobile && (
                 <span style={{ cursor: "pointer" }}>{`쇼핑백(${
-                  0
+                  cartItemCount || 0
                 })`}</span>
               )}
             </div>

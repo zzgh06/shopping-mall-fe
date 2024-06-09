@@ -5,14 +5,23 @@ import Sidebar from "../component/Sidebar";
 import Navbar from "../component/Navbar";
 import ToastMessage from "../component/ToastMessage";
 import userStore from "../store/userStore";
+import cartStore from "../store/cartStore";
 
 const AppLayout = ({ children }) => {
   const location = useLocation();
-  const {user, tokenLogin} = userStore();
+  const { user, tokenLogin } = userStore();
+  const { getCartQty } = cartStore();
 
   useEffect(() => {
     tokenLogin();
   }, []);
+
+  // 로그인되어 있을 경우 카트의 담긴 아이템의 갯수 가져옴
+  useEffect(() => {
+    if (user) {
+      getCartQty();
+    }
+  }, [user]);
 
   return (
     <div>

@@ -65,6 +65,24 @@ const cartStore = create((set, get) => ({
       return false;
     }
   },
+  getCartQty : async () => {
+    set({ loading: true, error: "" });
+    try {
+      const response = await api.get("/cart/qty");
+      // console.log('qqq',response.data)
+      set({ loading : false, error : "", cartItemCount : response.data.qty });
+    } catch (error) {
+      set({ loading: false, error: error });
+    }
+  },
+  // 로그아웃 시 카트 초기화
+  clearCart: () => {
+    set({
+      cartList: [],
+      totalPrice: 0,
+      cartItemCount: 0,
+    });
+  },
 }));
 
 export default cartStore;

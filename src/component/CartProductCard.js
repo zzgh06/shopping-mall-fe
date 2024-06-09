@@ -2,12 +2,11 @@ import React from "react";
 import { faTrash } from "@fortawesome/free-solid-svg-icons";
 import { Row, Col, Form } from "react-bootstrap";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { cartActions } from "../action/cartAction";
 import { currencyFormat } from "../utils/number";
 import useCommonUiStore from "../store/commonUiStore";
 
 const CartProductCard = ({ item, deleteCartItem, getCartList, updateQty }) => {
-  console.log('item',item)
+  // console.log('item',item)
   const {showToastMessage} = useCommonUiStore();
   const handleQtyChange = async (id, event) => {
     //아이템 수량을 수정한다
@@ -18,7 +17,7 @@ const CartProductCard = ({ item, deleteCartItem, getCartList, updateQty }) => {
       showToastMessage('상품 수량 변경에 실패하였습니다', 'error');
     } else {
       showToastMessage('상품 수량 변경 성공', 'success');
-      getCartList();
+      await getCartList();
     }
   };
 
@@ -38,7 +37,7 @@ const CartProductCard = ({ item, deleteCartItem, getCartList, updateQty }) => {
     <div className="product-card-cart">
       <Row>
         <Col md={2} xs={12}>
-          <img
+          <img style={{paddingRight :'15px'}}
             src={item?.productId.images[0]}
             width={112} alt={item?.productId.name}
           />
@@ -65,7 +64,7 @@ const CartProductCard = ({ item, deleteCartItem, getCartList, updateQty }) => {
             <Form.Select
               onChange={(event) => handleQtyChange(item._id, event)}
               required
-              defaultValue={item.qty}
+              defaultValue={item?.qty}
               className="qty-dropdown"
             >
               <option value={1}>1</option>
