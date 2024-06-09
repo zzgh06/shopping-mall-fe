@@ -83,6 +83,10 @@ const cartStore = create((set, get) => ({
       cartItemCount: 0,
     });
   },
+  // 에러 초기화
+  resetError: () => {
+    set({ error: "" });
+  },
 }));
 
 export default cartStore;

@@ -1,8 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { Container, Row, Col, Button, Dropdown, Modal } from "react-bootstrap";
-import { ColorRing } from "react-loader-spinner";
-import { cartActions } from "../action/cartAction";
 import { currencyFormat } from "../utils/number";
 import { RotatingLines } from "react-loader-spinner";
 import "../style/productDetail.style.css";
@@ -13,7 +11,7 @@ import useCommonUiStore from "../store/commonUiStore";
 
 const ProductDetail = () => {
   const { loading, selectedProduct, getProductDetail } = productStore();
-  const { addToCart, error } = cartStore();
+  const { addToCart, error, resetError  } = cartStore();
   const { showToastMessage } = useCommonUiStore();
   const { user } = userStore();
   const [size, setSize] = useState("");
@@ -25,7 +23,11 @@ const ProductDetail = () => {
   useEffect(() => {
     //상품 디테일 정보 가져오기
     getProductDetail(id);
-  }, [id]);
+    // 컴포넌트 언마운트 시 에러 초기화
+    return () => {
+      resetError();
+    };
+  }, [id, getProductDetail, resetError]);
 
   // error 메세지가 있거나 "" 빈문자열이 아닐때, 에러메세지
   useEffect(()=>{
