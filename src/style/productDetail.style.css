@@ -11,3 +11,8 @@
     font-size: 20px;
     margin-bottom: 10px;
 }
+
+.low-stock {
+    font-weight: 600;
+    color: red;
+}
