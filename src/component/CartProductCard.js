@@ -5,11 +5,14 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { currencyFormat } from "../utils/number";
 import useCommonUiStore from "../store/commonUiStore";
 import productStore from "../store/productStore";
-const CartProductCard = ({ item, deleteCartItem, getCartList, updateQty }) => {
-  console.log("item", item);
+const CartProductCard = ({ item, deleteCartItem, getCartList, updateQty, selectedItems, selectItem }) => {
+  // console.log("item", item);
   const [showModal, setShowModal] = useState(false);
-  const { selectedProduct } = productStore();
   const { showToastMessage } = useCommonUiStore();
+  const isLowStock = item.productId.stock[item.size] <= 5;
+  const handleCloseModal = () => setShowModal(false);
+  const handleOpenModal = () => setShowModal(true);
+
   const handleQtyChange = async (id, event) => {
     //아이템 수량을 수정한다
     const value = event.target.value;
@@ -23,9 +26,6 @@ const CartProductCard = ({ item, deleteCartItem, getCartList, updateQty }) => {
     }
   };
 
-  const handleCloseModal = () => setShowModal(false);
-  const handleOpenModal = () => setShowModal(true);
-
   // 카트 아이템 삭제
   const deleteCart = async (id) => {
     //아이템을 지운다
@@ -38,7 +38,6 @@ const CartProductCard = ({ item, deleteCartItem, getCartList, updateQty }) => {
       getCartList();
     }
   };
-
   return (
     <>
       <div className="product-card-cart">
@@ -53,7 +52,15 @@ const CartProductCard = ({ item, deleteCartItem, getCartList, updateQty }) => {
           </Col>
           <Col md={10} xs={12}>
             <div className="display-flex space-between">
-              <h3>{item?.productId.name}</h3>
+              <h3>
+                {item?.productId.name}
+                {/* 체크된 상품만 구입 */}
+                <input
+                  type="checkbox"
+                  checked={selectedItems.includes(item._id)}
+                  onChange={() => selectItem(item._id)}
+                />
+              </h3>
               <button className="trash-button">
                 <FontAwesomeIcon
                   icon={faTrash}
@@ -70,9 +77,9 @@ const CartProductCard = ({ item, deleteCartItem, getCartList, updateQty }) => {
             <div>
               Total: ₩ {currencyFormat(item?.productId.price * item?.qty)}
             </div>
-            {selectedProduct?.stock[item.size] <= 5 && (
+            {isLowStock && (
               <div className="low-stock">
-                {selectedProduct?.stock[item.size]}개 남음 (품절임박)
+                {`남은 수량: ${item.productId.stock[item.size]}개`}
               </div>
             )}
             <div>

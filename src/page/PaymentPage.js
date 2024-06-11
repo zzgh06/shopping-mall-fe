@@ -8,7 +8,6 @@ import { useNavigate } from "react-router";
 import { cc_expires_format } from "../utils/number";
 import cartStore from "../store/cartStore";
 import orderStore from "../store/orderStore";
-import commonUiStore from "../store/commonUiStore";
 
 const PaymentPage = () => {
   const [cardValue, setCardValue] = useState({
@@ -18,9 +17,19 @@ const PaymentPage = () => {
     name: "",
     number: "",
   });
-  const { showToastMessage } = commonUiStore();
-  const { cartList, totalPrice, getCartQty } = cartStore();
-  const { error, createOrder } = orderStore();
+  const { cartList, selectedItems, getCartQty, deleteSelectedCartItems } =
+    cartStore();
+  const { createOrder } = orderStore();
+
+  const selectedCartItems = cartList.filter((item) =>
+    selectedItems.includes(item._id)
+  );
+  const totalPrice = selectedCartItems.reduce(
+    (total, item) => total + item.productId.price * item.qty,
+    0
+  );
+  // console.log(selectedItems)
+  // console.log(totalPrice)
   const navigate = useNavigate();
   const [firstLoading, setFirstLoading] = useState(true);
   const [shipInfo, setShipInfo] = useState({
@@ -32,12 +41,6 @@ const PaymentPage = () => {
     zip: "",
   });
 
-  useEffect(() => {
-    if (error && error !== "") {
-      showToastMessage(error, "error");
-    }
-  }, [error, showToastMessage]);
-  
   //맨처음 페이지 로딩할때는 넘어가고  오더번호를 받으면 성공페이지로 넘어가기
   const handleSubmit = async (event) => {
     event.preventDefault();
@@ -46,7 +49,7 @@ const PaymentPage = () => {
       totalPrice,
       shipTo: { address, city, zip },
       contact: { firstName, lastName, contact },
-      orderList: cartList.map((item) => {
+      orderList: selectedCartItems?.map((item) => {
         return {
           productId: item.productId._id,
           price: item.productId.price,
@@ -57,13 +60,10 @@ const PaymentPage = () => {
     };
     //오더 생성하기
     const success = await createOrder(data, navigate);
-    if (!success) {
-      // showToastMessage('선택하신 상품의 사이즈가 없습니다', 'error');
-      if (error && error !== "") {
-        showToastMessage("선택하신 상품의 사이즈가 없습니다", "error");
-      }
+    if(success) {
+      handleContinuePayment();
+      getCartQty();
     }
-    getCartQty();
   };
 
   const handleFormChange = (event) => {
@@ -92,6 +92,10 @@ const PaymentPage = () => {
       navigate("/cart");
     }
   }, []);
+
+  const handleContinuePayment = async () => {
+    await deleteSelectedCartItems();
+  };
   return (
     <Container>
       <Row>
@@ -162,7 +166,10 @@ const PaymentPage = () => {
                   </Form.Group>
                 </Row>
                 <div className="mobile-receipt-area">
-                  <OrderReceipt cartList={cartList} totalPrice={totalPrice} />
+                  <OrderReceipt
+                    selectedCartItems={selectedCartItems}
+                    totalPrice={totalPrice}
+                  />
                 </div>
                 <div>
                   <h2 className="payment-title">결제 정보</h2>
@@ -185,7 +192,10 @@ const PaymentPage = () => {
           </div>
         </Col>
         <Col lg={5} className="receipt-area">
-          <OrderReceipt cartList={cartList} totalPrice={totalPrice} />
+          <OrderReceipt
+            selectedCartItems={selectedCartItems}
+            totalPrice={totalPrice}
+          />
         </Col>
       </Row>
     </Container>

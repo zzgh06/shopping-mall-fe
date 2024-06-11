@@ -7,14 +7,23 @@ import OrderReceipt from "../component/OrderReceipt";
 import "../style/cart.style.css";
 
 const CartPage = () => {
-  const { getCartList, cartList, totalPrice, deleteCartItem, updateQty } =
-    cartStore();
-  // console.log('ccc', cartList)
+  const {
+    getCartList,
+    cartList,
+    deleteCartItem,
+    updateQty,
+    selectedItems,
+    selectItem,
+  } = cartStore();
+
   useEffect(() => {
-    //카트리스트 불러오기
     getCartList();
   }, []);
 
+  // 선택된 상품의 정보와 총가격 orderReceipt에 전달
+  const selectedCartItems = cartList.filter(item => selectedItems.includes(item._id));
+  const totalPrice = selectedCartItems.reduce((total, item) => total + item.productId.price * item.qty, 0);
+  
   return (
     <Container>
       <Row>
@@ -27,12 +36,14 @@ const CartPage = () => {
                   deleteCartItem={deleteCartItem}
                   getCartList={getCartList}
                   updateQty={updateQty}
+                  selectedItems={selectedItems}
+                  selectItem={selectItem}
                   key={item._id}
                 />
               ))}
             </Col>
             <Col xs={12} md={5}>
-              <OrderReceipt cartList={cartList} totalPrice={totalPrice} />
+              <OrderReceipt selectedCartItems={selectedCartItems} totalPrice={totalPrice} />
             </Col>
           </>
         ) : (
@@ -44,7 +55,7 @@ const CartPage = () => {
               </div>
             </Col>
             <Col xs={12} md={5}>
-              <OrderReceipt cartList={cartList} totalPrice={totalPrice} />
+              <OrderReceipt selectedCartItems={selectedCartItems} totalPrice={totalPrice} />
             </Col>
           </>
         )}

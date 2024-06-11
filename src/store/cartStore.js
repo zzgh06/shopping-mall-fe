@@ -7,6 +7,7 @@ const cartStore = create((set, get) => ({
   cartList: [],
   totalPrice: 0,
   cartItemCount: 0,
+  selectedItems: [],
   addToCart: async ({ id, size }) => {
     set({ loading: true, error: "" });
     try {
@@ -27,55 +28,83 @@ const cartStore = create((set, get) => ({
     set({ loading: true, error: "" });
     try {
       const response = await api.get("/cart");
-      // console.log('response', response.data.data)
+      const cartItems = response.data.data;
       set({
         loading: false,
         error: "",
-        cartList: response.data.data,
-        totalPrice: response.data.data.reduce(
-          (total, item) => (total += item.productId.price * item.qty),
-          0
-        ),
+        cartList: cartItems,
+        // 카트에 담긴 상품은 기본적으로 선택된 상태
+        selectedItems: cartItems.map(item => item._id),
       });
     } catch (error) {
       set({ loading: false, error: error });
     }
   },
-  deleteCartItem : async (id) => {
+  // 체크박스에 따라 selectedItems 담긴 아이템 변경
+  selectItem: (id) => {
+    const { selectedItems } = get();
+    if (selectedItems.includes(id)) {
+      set({ selectedItems: selectedItems.filter(item => item !== id) });
+    } else {
+      set({ selectedItems: [...selectedItems, id] });
+    }
+  },
+  deleteCartItem: async (id) => {
     set({ loading: true, error: "" });
     try {
+      console.log(id)
       const response = await api.delete(`/cart/${id}`);
-      set({ loading: false, error: "",  cartItemCount : response.data.cartItemQty});
+      set({ loading: false, error: "", cartItemCount: response.data.cartItemQty });
       return true;
-    } catch(error) {
+    } catch (error) {
       set({ loading: false, error: error });
       return false;
     }
   },
-  updateQty : async (id, value) => {
+  // 선택된 상품만 결제되어 카트에서 선택된 상품만 삭제하기 위한 함수
+  deleteSelectedCartItems: async () => {
+    const { selectedItems, deleteCartItem, getCartList } = get();
     set({ loading: true, error: "" });
+
     try {
-      // { qty : value} 백엔드에는 req.body 에 qty로 전달되고 있어 이런식으로 변경해서 보내야함
-      const response = await api.put(`/cart/${id}`, { qty : value});
-      // console.log('rrr', response.data.data)
-      set({ loading: false, error: "",  cartItemCount : response.data.data});
-      return true;
-    } catch(error){
-      set({ loading: false, error: error });
-      return false;
-    }
-  },
-  getCartQty : async () => {
-    set({ loading: true, error: "" });
-    try {
-      const response = await api.get("/cart/qty");
-      // console.log('qqq',response.data)
-      set({ loading : false, error : "", cartItemCount : response.data.qty });
+      // 문제
+      // 이전에는 await Promise.all(selectedItems.map(async (id) => deleteCartItem(id))); 코드로
+      // 병렬적으로 수행하려고 했지만 요청 중 에러가 발생하여 Promise.all은 중단되어 catch 문이 실행됨.
+
+      // 해결
+      // for of 문을 이용하여 selectedItems의 id 값을 순차적으로 deleteCartItem 함수에 전달
+      // 아마 deleteCartItem 함수는 하나의 아이템만 삭제하는 함수이기 때문에 Promise.all 처럼 한꺼번에 병렬적으로 수행할 경우
+      // 에러가 발생하지 않았나 싶음
+      for (const id of selectedItems) {
+        await deleteCartItem(id);
+      }
+      await getCartList();
+      set({ selectedItems: [] });
+      set({ loading: false, error: "" });
     } catch (error) {
       set({ loading: false, error: error });
     }
   },
-  // 로그아웃 시 카트 초기화
+  updateQty: async (id, value) => {
+    set({ loading: true, error: "" });
+    try {
+      const response = await api.put(`/cart/${id}`, { qty: value });
+      set({ loading: false, error: "", cartItemCount: response.data.data });
+      return true;
+    } catch (error) {
+      set({ loading: false, error: error });
+      return false;
+    }
+  },
+  getCartQty: async () => {
+    set({ loading: true, error: "" });
+    try {
+      const response = await api.get("/cart/qty");
+      set({ loading: false, error: "", cartItemCount: response.data.qty });
+    } catch (error) {
+      set({ loading: false, error: error });
+    }
+  },
   clearCart: () => {
     set({
       cartList: [],
@@ -83,7 +112,6 @@ const cartStore = create((set, get) => ({
       cartItemCount: 0,
     });
   },
-  // 에러 초기화
   resetError: () => {
     set({ error: "" });
   },

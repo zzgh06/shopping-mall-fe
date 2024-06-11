@@ -1,8 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { Container, Button } from "react-bootstrap";
 import SearchBox from "../component/SearchBox";
-import { useDispatch, useSelector } from "react-redux";
-import { productActions } from "../action/productAction";
 import NewItemDialog from "../component/NewItemDialog";
 import * as types from "../constants/product.constants";
 import ReactPaginate from "react-paginate";
@@ -26,7 +24,7 @@ const AdminProduct = () => {
   const [mode, setMode] = useState("new");
   
   // zustand : productStore
-  const { error, loading, getProductList, productList, totalPageNumber, setSelectedProduct, deleteProduct } = productStore();
+  const { getProductList, productList, totalPageNumber, setSelectedProduct, deleteProduct } = productStore();
   const { showToastMessage } = useCommonUiStore();
   const tableHeader = [
     "#",
