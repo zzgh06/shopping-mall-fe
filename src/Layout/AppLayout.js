@@ -11,6 +11,7 @@ const AppLayout = ({ children }) => {
   const location = useLocation();
   const { user, tokenLogin } = userStore();
   const { getCartQty } = cartStore();
+  console.log(user)
 
   useEffect(() => {
     tokenLogin();

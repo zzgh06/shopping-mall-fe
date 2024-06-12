@@ -1,42 +1,33 @@
 import React, { useEffect, useState } from "react";
 import { Container, Form, Button, Alert } from "react-bootstrap";
 import { Link, useNavigate } from "react-router-dom";
-import { useDispatch } from "react-redux";
 
 import "../style/login.style.css";
 import userStore from "../store/userStore";
-import ClipLoader from "react-spinners/ClipLoader";
+import { GoogleLogin } from "@react-oauth/google";
 
 const Login = () => {
-  const dispatch = useDispatch();
   const navigate = useNavigate();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const { user, emailLogin, error, loading, clearError } = userStore();
-  
-  useEffect(()=>{
+  const { user, emailLogin, loginWithGoogle,  error, clearError } = userStore();
+
+  useEffect(() => {
     return () => {
-      clearError()
-    }
-  }, [])
-  
+      clearError();
+    };
+  }, []);
+
   // 이메일 로그인
   const loginWithEmail = async (event) => {
     event.preventDefault();
-    await emailLogin({email, password})
+    await emailLogin({ email, password });
   };
 
   const handleGoogleLogin = async (googleData) => {
     // 구글로 로그인 하기
+    loginWithGoogle(googleData.credential)
   };
-
-  // if (loading){
-  //   return (
-  //     <div className="loading-container">
-  //       <ClipLoader color="#11111" loading={loading} size={150} aria-label="Loading Spinner"/>
-  //     </div>
-  //   )
-  // }
 
   if (user) {
     navigate("/");
@@ -80,7 +71,19 @@ const Login = () => {
 
           <div className="text-align-center mt-2">
             <p>-외부 계정으로 로그인하기-</p>
-            <div className="display-center"></div>
+            <div className="display-center">
+              <GoogleLogin
+                onSuccess={handleGoogleLogin}
+                onError={() => {
+                  console.log("Login Failed");
+                }}
+              />
+            </div>
+            {/* 
+            1. 구글 로그인 버튼 가져오기
+            2. Oauth 로그인을 위해서 google api 사이트에 가입하고 클라이언트키, 시크릿 키 받아오기
+            3. 로그인
+            */}
           </div>
         </Form>
       </Container>
