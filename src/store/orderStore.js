@@ -1,30 +1,61 @@
-import { create } from 'zustand';
-import api from '../utils/api';
-import useCommonUiStore from './commonUiStore';
+import { create } from "zustand";
+import api from "../utils/api";
+import useCommonUiStore from "./commonUiStore";
 
 const orderStore = create((set, get) => ({
   loading: false,
   error: "",
-  orderNum : "",
-  createOrder : async (data, navigate) => {
-    console.log(data)
-    set({loading:true, error: ""})
+  orderNum: "",
+  orderList: [],
+  totalPageNum: 0,
+  selectedOrder: null,
+  createOrder: async (data, navigate) => {
+    set({ loading: true, error: "" });
     try {
-      const response = await api.post("/order", data)
+      const response = await api.post("/order", data);
       // console.log('rrr', response.data.orderNum)
-      set({loading : false, error: "", orderNum : response.data.orderNum})
-      navigate('/payment/success')
-      return true
-    } catch(error) {
+      set({ loading: false, error: "", orderNum: response.data.orderNum });
+      navigate("/payment/success");
+      return true;
+    } catch (error) {
       // console.log(error.error)
       set({ loading: false });
       const { showToastMessage } = useCommonUiStore.getState();
       showToastMessage(error.error, "error");
-      navigate('/cart')
+      navigate("/cart");
       return false;
     }
-  }
-})
-)
+  },
+  getOrderList: async (query) => {
+    set({ loading: true, error: "" });
+    try {
+      const response = await api.get("/order/me", { params: { ...query } });
+      // console.log(response.data)
+      set({
+        loading: false,
+        error: "",
+        orderList: response.data.data,
+        totalPageNum: response.data.totalPageNum,
+      });
+    } catch (error) {
+      set({ loading: false, error: error.message });
+    }
+  },
+  setSelectedOrder: (order) => {
+    set({ selectedOrder: order });
+  },
+  updateOrder: async (id, status) => {
+    set({ loading: true, error: "" });
+    try {
+      const response = await api.put(`/order/${id}`, { status });
+      // console.log(response);
+      set({ loading: false, error: "" });
+      const { showToastMessage } = useCommonUiStore.getState();
+      showToastMessage("주문상태 변경을 성공하였습니다", "success");
+    } catch (error) {
+      set({ loading: false, error: error.message });
+    }
+  },
+}));
 
 export default orderStore;

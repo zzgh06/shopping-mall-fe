@@ -1,22 +1,24 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Form, Modal, Button, Col, Table } from "react-bootstrap";
-import { useDispatch, useSelector } from "react-redux";
 
 import "../style/adminOrder.style.css";
 import { ORDER_STATUS } from "../constants/order.constants";
-import { orderActions } from "../action/orderAction";
 import { currencyFormat } from "../utils/number";
+import orderStore from "../store/orderStore";
 
-const OrderDetailDialog = ({ open, handleClose }) => {
-  const selectedOrder = useSelector((state) => state.order.selectedOrder);
+const OrderDetailDialog = ({ open, handleClose, searchQuery }) => {
+  const { selectedOrder, updateOrder, getOrderList } = orderStore();
   const [orderStatus, setOrderStatus] = useState(selectedOrder.status);
-  const dispatch = useDispatch();
 
+  // status 변경 ["preparing", "shipping", "delivered", "refund"];
   const handleStatusChange = (event) => {
     setOrderStatus(event.target.value);
   };
-  const submitStatus = () => {
-    dispatch(orderActions.updateOrder(selectedOrder._id, orderStatus));
+
+  const submitStatus = async (event) => {
+    event.preventDefault();
+    await updateOrder(selectedOrder._id, orderStatus);
+    await getOrderList(searchQuery);
     handleClose();
   };
 

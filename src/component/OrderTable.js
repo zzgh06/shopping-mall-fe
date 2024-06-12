@@ -14,7 +14,7 @@ const OrderTable = ({ header, data, openEditForm }) => {
           </tr>
         </thead>
         <tbody>
-          {data.length > 0 ? (
+          {data?.length > 0 ? (
             data.map((item, index) => (
               <tr onClick={() => openEditForm(item)}>
                 <th>{index}</th>
@@ -24,7 +24,7 @@ const OrderTable = ({ header, data, openEditForm }) => {
                 {item.items.length > 0 ? (
                   <th>
                     {item.items[0].productId.name}
-                    {item.items.length > 1 && `외 ${item.items.length - 1}개`}
+                    {item.items.length > 1 && ` 외 ${item.items.length - 1}개`}
                   </th>
                 ) : (
                   <th></th>
