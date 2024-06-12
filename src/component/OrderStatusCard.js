@@ -4,7 +4,6 @@ import { badgeBg } from "../constants/order.constants";
 import { currencyFormat } from "../utils/number";
 
 const OrderStatusCard = ({ item }) => {
-  console.log(item);
   return (
     <div>
       <Row className="status-card">

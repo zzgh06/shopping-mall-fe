@@ -30,7 +30,7 @@ const orderStore = create((set, get) => ({
     set({ loading: true, error: "" });
     try {
       const response = await api.get("/order/me", { params: { ...query } });
-      // console.log(response.data)
+      console.log(response.data)
       set({
         loading: false,
         error: "",
