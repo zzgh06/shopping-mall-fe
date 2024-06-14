@@ -16,3 +16,13 @@
     font-weight: 600;
     color: red;
 }
+
+.likes-count {
+    display: flex;
+    align-items: center;
+    margin: 10px 0;
+}
+
+.likes-count svg {
+    margin-right: 10px;
+}

@@ -11,8 +11,11 @@ import ProductAll from "../page/ProductAll";
 import ProductDetail from "../page/ProductDetail";
 import RegisterPage from "../page/RegisterPage";
 import PrivateRoute from "./PrivateRoute";
+import LikesPage from "../page/LikesPage";
+
 
 const AppRouter = () => {
+
   return (
     <Routes>
       <Route path="/" element={<ProductAll />} />
@@ -21,6 +24,7 @@ const AppRouter = () => {
       <Route path="/product/:id" element={<ProductDetail />} />
       <Route element={<PrivateRoute permissionLevel="customer" />}>
         <Route path="/cart" element={<CartPage />} />
+        <Route path="/likes" element={<LikesPage />} />
         <Route path="/payment" element={<PaymentPage />} />
         <Route path="/payment/success" element={<OrderCompletePage />} />
         <Route path="/account/purchase" element={<MyPage />} />

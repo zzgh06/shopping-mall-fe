@@ -7,9 +7,12 @@ import productStore from "../store/productStore";
 import userStore from "../store/userStore";
 import cartStore from "../store/cartStore";
 import useCommonUiStore from "../store/commonUiStore";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import * as solid from "@fortawesome/free-regular-svg-icons";
 
 const ProductDetail = () => {
-  const { loading, selectedProduct, getProductDetail, toggleLikeProduct } = productStore();
+  const { loading, selectedProduct, getProductDetail } =
+    productStore();
   const { addToCart, error, resetError } = cartStore();
   const { showToastMessage } = useCommonUiStore();
   const { user } = userStore();
@@ -113,7 +116,6 @@ const ProductDetail = () => {
               <div className="product-info">{selectedProduct?.name}</div>
               <div className="product-info">₩ {selectedProduct?.price}</div>
               <div className="product-info">{selectedProduct?.description}</div>
-
               <Dropdown
                 className="drop-down size-drop-down"
                 title={size}
@@ -160,6 +162,10 @@ const ProductDetail = () => {
               >
                 추가
               </Button>
+              <div className="likes-count">
+              <FontAwesomeIcon icon={solid.faHeart} color={'red'} size={'2x'} />
+                <span>좋아요 {selectedProduct?.likes}</span>
+              </div>
             </Col>
           </Row>
         </Container>
