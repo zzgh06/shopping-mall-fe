@@ -91,6 +91,7 @@ body{
   padding-right: 30px;
 }
 .card{
+  position: relative;
   border:none !important;
   margin-bottom: 10px;
   transition: all 0.3s;
@@ -101,6 +102,14 @@ body{
   color: #63786a;
   font-weight: bold;
   height: 20px;
+}
+
+.like-button {
+  position: absolute;
+  bottom: 60px;
+  right: 0;
+  width: 40px;
+  background-color: none;
 }
 
 .new-product {

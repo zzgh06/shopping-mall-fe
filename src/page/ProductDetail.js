@@ -9,7 +9,7 @@ import cartStore from "../store/cartStore";
 import useCommonUiStore from "../store/commonUiStore";
 
 const ProductDetail = () => {
-  const { loading, selectedProduct, getProductDetail } = productStore();
+  const { loading, selectedProduct, getProductDetail, toggleLikeProduct } = productStore();
   const { addToCart, error, resetError } = cartStore();
   const { showToastMessage } = useCommonUiStore();
   const { user } = userStore();

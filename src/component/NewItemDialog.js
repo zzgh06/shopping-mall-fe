@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import {useNavigate} from 'react-router-dom';
 import { Form, Modal, Button, Row, Col } from "react-bootstrap";
 import CloudinaryUploadWidget from "../utils/CloudinaryUploadWidget";
-import { CATEGORY, STATUS, SIZE } from "../constants/product.constants";
+import { CATEGORY, STATUS, SIZE, GENDER } from "../constants/product.constants";
 import "../style/adminProduct.style.css";
 import * as types from "../constants/product.constants";
 import { image } from "@cloudinary/url-gen/qualifiers/source";
@@ -16,6 +16,7 @@ const InitialFormData = {
   stock: {},
   images: [],
   description: "",
+  gender: [],
   category: [],
   status: "active",
   price: 0,
@@ -122,6 +123,25 @@ const NewItemDialog = ({ mode, showDialog, setShowDialog, searchQuery, setSearch
       setFormData({
         ...formData,
         category: [...formData.category, event.target.value],
+      });
+    }
+  };
+
+  const onHandleGender = (event) => {
+    if (formData.gender.includes(event.target.value)) {
+      // 포함되어 있다면 해당 카테고리를 배열에서 제거
+      const newGender = formData.gender.filter(
+        (item) => item !== event.target.value
+      );
+      setFormData({
+        ...formData,
+        gender: [...newGender],
+      });
+    } else {
+      // 포함되어 있지 않다면 해당 카테고리를 배열에 추가
+      setFormData({
+        ...formData,
+        gender: [...formData.gender, event.target.value],
       });
     }
   };
@@ -289,6 +309,23 @@ const NewItemDialog = ({ mode, showDialog, setShowDialog, searchQuery, setSearch
               type="number"
               placeholder="0"
             />
+          </Form.Group>
+
+          <Form.Group as={Col} controlId="gender">
+            <Form.Label>Gender</Form.Label>
+            <Form.Control
+              as="select"
+              multiple
+              onChange={onHandleGender}
+              value={formData.gender}
+              required
+            >
+              {GENDER.map((item, idx) => (
+                <option key={idx} value={item.toLowerCase()}>
+                  {item}
+                </option>
+              ))}
+            </Form.Control>
           </Form.Group>
 
           <Form.Group as={Col} controlId="category">

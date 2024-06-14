@@ -1,12 +1,13 @@
-import React from "react";
-import { useEffect } from "react";
+import React, { useEffect } from "react";
 import { Container, Row, Col } from "react-bootstrap";
 import cartStore from "../store/cartStore";
 import CartProductCard from "../component/CartProductCard";
 import OrderReceipt from "../component/OrderReceipt";
 import "../style/cart.style.css";
+import userStore from "../store/userStore";
 
 const CartPage = () => {
+  const { user, tokenLogin } = userStore(); // user 정보와 로그인 메소드 가져오기
   const {
     getCartList,
     cartList,
@@ -17,13 +18,45 @@ const CartPage = () => {
   } = cartStore();
 
   useEffect(() => {
-    getCartList();
+    // 페이지가 로드될 때 사용자 정보를 가져옴
+    tokenLogin(); // 로그인 메소드 호출
+    getCartList(); // 카트 정보 가져오기
   }, []);
 
+  // 할인율 계산 함수
+  const calculateDiscountRate = (userLevel, totalPurchases) => {
+    let discountRate = 0.03; // 기본 할인율
+    if (userLevel === "gold") {
+      discountRate = 0.1;
+    } else if (userLevel === "silver") {
+      discountRate = 0.07;
+    } else if (userLevel === "bronze") {
+      discountRate = 0.05;
+    }
+    // 총 구매 금액에 따른 할인율 추가 계산
+    if (totalPurchases > 1000000) {
+      discountRate += 0.02;
+    } else if (totalPurchases > 500000) {
+      discountRate += 0.01;
+    }
+    return discountRate;
+  };
+
   // 선택된 상품의 정보와 총가격 orderReceipt에 전달
-  const selectedCartItems = cartList.filter(item => selectedItems.includes(item._id));
-  const totalPrice = selectedCartItems.reduce((total, item) => total + item.productId.price * item.qty, 0);
-  
+  const selectedCartItems = cartList.filter((item) =>
+    selectedItems.includes(item._id)
+  );
+  const totalPrice = selectedCartItems.reduce(
+    (total, item) => total + item.productId.price * item.qty,
+    0
+  );
+
+  // 사용자 정보가 로드되기 전에는 할인율을 계산할 수 없으므로 초기값으로 설정
+  const discountRate = user ? calculateDiscountRate(user.level, user.totalPurchases) : 0;
+
+  // 할인된 가격 계산
+  const discountedPrice = totalPrice * (1 - discountRate);
+
   return (
     <Container>
       <Row>
@@ -43,7 +76,11 @@ const CartPage = () => {
               ))}
             </Col>
             <Col xs={12} md={5}>
-              <OrderReceipt selectedCartItems={selectedCartItems} totalPrice={totalPrice} />
+              <OrderReceipt
+                selectedCartItems={selectedCartItems}
+                totalPrice={totalPrice}
+                discountedPrice={discountedPrice}
+              />
             </Col>
           </>
         ) : (
@@ -55,7 +92,11 @@ const CartPage = () => {
               </div>
             </Col>
             <Col xs={12} md={5}>
-              <OrderReceipt selectedCartItems={selectedCartItems} totalPrice={totalPrice} />
+              <OrderReceipt
+                selectedCartItems={selectedCartItems}
+                totalPrice={totalPrice}
+                discountedPrice={discountedPrice}
+              />
             </Col>
           </>
         )}

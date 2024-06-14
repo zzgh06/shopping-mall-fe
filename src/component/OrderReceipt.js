@@ -4,10 +4,9 @@ import { useNavigate } from "react-router";
 import { useLocation } from "react-router-dom";
 import { currencyFormat } from "../utils/number";
 
-const OrderReceipt = ({ selectedCartItems, totalPrice }) => {
+const OrderReceipt = ({ selectedCartItems, totalPrice, discountedPrice }) => {
   const location = useLocation();
   const navigate = useNavigate();
-  
 
   return (
     <div className="receipt-container">
@@ -16,7 +15,10 @@ const OrderReceipt = ({ selectedCartItems, totalPrice }) => {
         {selectedCartItems?.map((item, index) => (
           <li key={index}>
             <div className="display-flex space-between">
-              <div>{item.productId.name} <span className="receipt-quantity">수량 X {item.qty}</span></div>
+              <div>
+                {item.productId.name}{" "}
+                <span className="receipt-quantity">수량 X {item.qty}</span>
+              </div>
               <div>₩ {currencyFormat(item.productId.price * item.qty)}</div>
             </div>
           </li>
@@ -24,10 +26,18 @@ const OrderReceipt = ({ selectedCartItems, totalPrice }) => {
       </ul>
       <div className="display-flex space-between receipt-title">
         <div>
-          <strong>Total:</strong>
+          <strong>총 가격:</strong>
         </div>
         <div>
           <strong>₩ {currencyFormat(totalPrice)}</strong>
+        </div>
+      </div>
+      <div className="display-flex space-between receipt-title">
+        <div>
+          <strong>등급할인:</strong>
+        </div>
+        <div>
+          <strong>₩ {currencyFormat(discountedPrice)}</strong>
         </div>
       </div>
       {location.pathname.includes("/cart") && selectedCartItems.length > 0 && (

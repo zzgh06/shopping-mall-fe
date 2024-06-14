@@ -9,7 +9,7 @@ const OrderStatusCard = ({ item }) => {
       <Row className="status-card">
         <Col xs={2}>
           <img
-            src={item.items[0].productId.images[0]}
+            src={item?.items[0].productId?.images[0]}
             alt=""
             height={96}
           />
@@ -22,9 +22,9 @@ const OrderStatusCard = ({ item }) => {
           <div className="text-12">주문일자: {item.createdAt.slice(0, 10)}</div>
 
           <div>
-            {item.items[0].productId.name}
-            {item.items.length > 1 ? (
-              <span>외 {item.items.length - 1}개</span>
+            {item.items[0].productId?.name}
+            {item.items?.length > 1 ? (
+              <span>외 {item.items?.length - 1}개</span>
             ) : (
               ""
             )}

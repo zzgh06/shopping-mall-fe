@@ -15,7 +15,8 @@ const MyPage = () => {
     page: query.get("page") || 1,
   });
   //오더리스트 들고오기
-  console.log(orderList);
+  // console.log(orderList);
+
   useEffect(() => {
     getOrderList({ ...searchQuery });
   }, [searchQuery]);
@@ -27,7 +28,6 @@ const MyPage = () => {
   useEffect(() => {
     const params = new URLSearchParams(searchQuery);
     const queryString = params.toString();
-
     navigate("?" + queryString);
   }, [searchQuery]);
 
@@ -42,7 +42,7 @@ const MyPage = () => {
   return (
     <>
       <Container className="status-card-container">
-        {orderList?.map((item) => (
+        {orderList.map((item) => (
           <OrderStatusCard item={item} key={item._id} />
         ))}
         <ReactPaginate

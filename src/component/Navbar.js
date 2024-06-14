@@ -48,6 +48,7 @@ const Navbar = ({ user }) => {
     navigate("/");
   };
 
+  console.log(user);
   return (
     <div>
       {showSearchBox && (
@@ -94,10 +95,27 @@ const Navbar = ({ user }) => {
         <div>
           <div className="display-flex">
             {user ? (
-              <div onClick={logout} className="nav-icon">
+              <div className="nav-icon">
+                <span>{user.name}님</span>
+                <span style={{ marginRight: "10px" }}>
+                  <strong>
+                    {user.level === "customer"
+                      ? "CUSTOMER"
+                      : user.level === "bronze"
+                      ? "BRONZE"
+                      : user.level === "silver"
+                      ? "SILVER"
+                      : user.level === "gold"
+                      ? "GOLD"
+                      : 'ADMIN'}
+                  </strong>{" "}
+                  등급
+                </span>
                 <FontAwesomeIcon icon={faUser} />
                 {!isMobile && (
-                  <span style={{ cursor: "pointer" }}>로그아웃</span>
+                  <span style={{ cursor: "pointer" }} onClick={logout}>
+                    로그아웃
+                  </span>
                 )}
               </div>
             ) : (
@@ -106,7 +124,10 @@ const Navbar = ({ user }) => {
                 {!isMobile && <span style={{ cursor: "pointer" }}>로그인</span>}
               </div>
             )}
-            <div onClick={() => navigate("/cart")} className="nav-icon">
+            <div
+              onClick={() => (user ? navigate("/cart") : navigate("/login"))}
+              className="nav-icon"
+            >
               <FontAwesomeIcon icon={faShoppingBag} />
               {!isMobile && (
                 <span style={{ cursor: "pointer" }}>{`쇼핑백(${
@@ -115,7 +136,9 @@ const Navbar = ({ user }) => {
               )}
             </div>
             <div
-              onClick={() => navigate("/account/purchase")}
+              onClick={() =>
+                user ? navigate("/account/purchase") : navigate("/login")
+              }
               className="nav-icon"
             >
               <FontAwesomeIcon icon={faBox} />
