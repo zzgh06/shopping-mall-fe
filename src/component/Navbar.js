@@ -1,7 +1,7 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faUser } from "@fortawesome/free-regular-svg-icons";
-import * as regular from '@fortawesome/free-regular-svg-icons';
+import * as regular from "@fortawesome/free-regular-svg-icons";
 import {
   faBars,
   faBox,
@@ -17,20 +17,18 @@ import { Modal } from "react-bootstrap";
 
 const Navbar = ({ user }) => {
   const { cartItemCount, clearCart } = cartStore();
-  const { userLogout } = userStore(); // 유저 스토어
+  const { userLogout } = userStore();
   const isMobile = window.navigator.userAgent.indexOf("Mobile") !== -1;
   const [showSearchBox, setShowSearchBox] = useState(false);
   const [showModal, setShowModal] = useState(false);
-
   const menuList = [
-    "여성",
-    "Divided",
-    "남성",
-    "신생아/유아",
-    "아동",
-    "H&M HOME",
-    "Sale",
-    "지속가능성",
+    "Women",
+    "Men",
+    "Top",
+    "Dress",
+    "Skirt",
+    "Accessories",
+    "Shoes",
   ];
 
   let [width, setWidth] = useState(0);
@@ -46,12 +44,11 @@ const Navbar = ({ user }) => {
   };
   const logout = () => {
     userLogout();
-    // 로그아웃시 카트 초기화
     clearCart();
     navigate("/");
   };
 
-  const hadleOpenModal = () => {
+  const handleOpenModal = () => {
     setShowModal(true);
   };
   const handleCloseModal = () => setShowModal(false);
@@ -106,7 +103,7 @@ const Navbar = ({ user }) => {
                 <div className="nav-icon">
                   <span>{user.name}님</span>
                   <span style={{ marginRight: "10px" }}>
-                    <strong onClick={() => hadleOpenModal()}>
+                    <strong onClick={() => handleOpenModal()}>
                       {user.level === "customer"
                         ? "CUSTOMER"
                         : user.level === "bronze"
@@ -157,9 +154,7 @@ const Navbar = ({ user }) => {
                 )}
               </div>
               <div
-                onClick={() =>
-                  user ? navigate("/likes") : navigate("/login")
-                }
+                onClick={() => (user ? navigate("/likes") : navigate("/login"))}
                 className="nav-icon"
               >
                 <FontAwesomeIcon icon={regular.faHeart} />
@@ -181,18 +176,22 @@ const Navbar = ({ user }) => {
 
         <div className="nav-logo">
           <Link to="/">
-            <img width={100} src="/image/WEFashion-logo.png" alt="hm-logo.png" />
+            <img
+              width={100}
+              src="/image/WEFashion-logo.png"
+              alt="WEFashion-logo.png"
+            />
           </Link>
         </div>
         <div className="nav-menu-area">
           <ul className="menu">
             {menuList.map((menu, index) => (
               <li key={index}>
-                <a href="#">{menu}</a>
+                <Link to={`/${menu.toLowerCase()}`}>{menu}</Link>
               </li>
             ))}
           </ul>
-          {!isMobile && ( // admin페이지에서 같은 search-box스타일을 쓰고있음 그래서 여기서 서치박스 안보이는것 처리를 해줌
+          {!isMobile && ( 
             <div className="search-box landing-search-box ">
               <FontAwesomeIcon icon={faSearch} />
               <input

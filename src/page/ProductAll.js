@@ -9,7 +9,6 @@ const ProductAll = () => {
 
   const [query, setQuery] = useSearchParams();
   const name = query.get("name");
-  // 처음 로딩하면 상품리스트 불러오기
   const { productList, getProductList, toggleLikeProduct } = productStore();
   const { user, likedProducts, fetchUserData } = userStore();
   useEffect(() => {
@@ -25,7 +24,7 @@ const ProductAll = () => {
         <Row>
           {productList && productList.length > 0 ? (
             productList?.map((item) => (
-              <Col lg={3} key={item._id}>
+              <Col lg={4} key={item._id}>
                 <ProductCard
                   item={item}
                   isLiked={likedProducts.includes(item._id)}

@@ -7,7 +7,7 @@ import "../style/cart.style.css";
 import userStore from "../store/userStore";
 
 const CartPage = () => {
-  const { user, tokenLogin } = userStore(); // user 정보와 로그인 메소드 가져오기
+  const { user, tokenLogin } = userStore(); 
   const {
     getCartList,
     cartList,
@@ -18,14 +18,13 @@ const CartPage = () => {
   } = cartStore();
 
   useEffect(() => {
-    // 페이지가 로드될 때 사용자 정보를 가져옴
-    tokenLogin(); // 로그인 메소드 호출
-    getCartList(); // 카트 정보 가져오기
+    tokenLogin();
+    getCartList();
   }, []);
 
   // 할인율 계산 함수
   const calculateDiscountRate = (userLevel, totalPurchases) => {
-    let discountRate = 0.03; // 기본 할인율
+    let discountRate = 0.03; 
     if (userLevel === "gold") {
       discountRate = 0.1;
     } else if (userLevel === "silver") {
@@ -41,8 +40,6 @@ const CartPage = () => {
     }
     return discountRate;
   };
-
-  // 선택된 상품의 정보와 총가격 orderReceipt에 전달
   const selectedCartItems = cartList.filter((item) =>
     selectedItems.includes(item._id)
   );
@@ -51,10 +48,8 @@ const CartPage = () => {
     0
   );
 
-  // 사용자 정보가 로드되기 전에는 할인율을 계산할 수 없으므로 초기값으로 설정
-  const discountRate = user ? calculateDiscountRate(user.level, user.totalPurchases) : 0;
-
   // 할인된 가격 계산
+  const discountRate = user ? calculateDiscountRate(user.level, user.totalPurchases) : 0;
   const discountedPrice = totalPrice * (1 - discountRate);
 
   return (

@@ -4,9 +4,14 @@ import { Row, Col, Form, Modal, Button } from "react-bootstrap";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { currencyFormat } from "../utils/number";
 import useCommonUiStore from "../store/commonUiStore";
-import productStore from "../store/productStore";
-const CartProductCard = ({ item, deleteCartItem, getCartList, updateQty, selectedItems, selectItem }) => {
-  // console.log("item", item);
+const CartProductCard = ({
+  item,
+  deleteCartItem,
+  getCartList,
+  updateQty,
+  selectedItems,
+  selectItem,
+}) => {
   const [showModal, setShowModal] = useState(false);
   const { showToastMessage } = useCommonUiStore();
   const isLowStock = item.productId.stock[item.size] <= 5;
@@ -14,9 +19,7 @@ const CartProductCard = ({ item, deleteCartItem, getCartList, updateQty, selecte
   const handleOpenModal = () => setShowModal(true);
 
   const handleQtyChange = async (id, event) => {
-    //아이템 수량을 수정한다
     const value = event.target.value;
-    // console.log(id, value)
     const success = await updateQty(id, value);
     if (!success) {
       showToastMessage("상품 수량 변경에 실패하였습니다", "error");
@@ -28,7 +31,6 @@ const CartProductCard = ({ item, deleteCartItem, getCartList, updateQty, selecte
 
   // 카트 아이템 삭제
   const deleteCart = async (id) => {
-    //아이템을 지운다
     const success = await deleteCartItem(id);
     if (!success) {
       showToastMessage("상품삭제실패", "error");

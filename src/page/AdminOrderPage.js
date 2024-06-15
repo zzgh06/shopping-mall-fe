@@ -34,11 +34,9 @@ const AdminOrderPage = () => {
   }, [searchQuery]);
 
   useEffect(() => {
-    // searchQuery.orderNum 이 "" 라면 searchQuery.orderNum 삭제
     if (searchQuery.orderNum === "") {
       delete searchQuery.orderNum;
     }
-    // searchQuery의 params을 가져와 쿼리 형태로 바꿔 navigate에 넘긴다
     const params = new URLSearchParams(searchQuery);
     const queryString = params.toString();
 
@@ -94,7 +92,6 @@ const AdminOrderPage = () => {
           breakLinkClassName="page-link"
           containerClassName="pagination"
           activeClassName="active"
-          // className="display-center list-style-none"
         />
       </Container>
 

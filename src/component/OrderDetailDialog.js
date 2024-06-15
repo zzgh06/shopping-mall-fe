@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { Form, Modal, Button, Col, Table } from "react-bootstrap";
 
 import "../style/adminOrder.style.css";
@@ -10,7 +10,6 @@ const OrderDetailDialog = ({ open, handleClose, searchQuery }) => {
   const { selectedOrder, updateOrder, getOrderList } = orderStore();
   const [orderStatus, setOrderStatus] = useState(selectedOrder.status);
 
-  // status 변경 ["preparing", "shipping", "delivered", "refund"];
   const handleStatusChange = (event) => {
     setOrderStatus(event.target.value);
   };

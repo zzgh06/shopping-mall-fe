@@ -12,6 +12,14 @@ import ProductDetail from "../page/ProductDetail";
 import RegisterPage from "../page/RegisterPage";
 import PrivateRoute from "./PrivateRoute";
 import LikesPage from "../page/LikesPage";
+import WomenPage from "../page/WomenPage";
+import MenPage from "../page/MenPage";
+import TopPage from "../page/TopPage";
+import DressPage from "../page/DressPage";
+import PantsPage from "../component/PantsPage";
+import SkirtPage from "../page/SkirtPage";
+import AccessoriesPage from "../page/AccessoriesPage";
+import ShoesPage from "../page/ShoesPage";
 
 
 const AppRouter = () => {
@@ -19,6 +27,13 @@ const AppRouter = () => {
   return (
     <Routes>
       <Route path="/" element={<ProductAll />} />
+      <Route path="/women" element={<WomenPage />} />
+      <Route path="/men" element={<MenPage />} />
+      <Route path="/top" element={<TopPage />} />
+      <Route path="/dress" element={<DressPage />} />
+      <Route path="/skirt" element={<SkirtPage />} />
+      <Route path="/accessories" element={<AccessoriesPage />} />
+      <Route path="/shoes" element={<ShoesPage />} />
       <Route path="/login" element={<Login />} />
       <Route path="/register" element={<RegisterPage />} />
       <Route path="/product/:id" element={<ProductDetail />} />

@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import { Container, Row, Col, Button, Dropdown, Modal } from "react-bootstrap";
+import { Container, Row, Col, Button, Dropdown, Modal, Carousel } from "react-bootstrap";
 import { RotatingLines } from "react-loader-spinner";
 import "../style/productDetail.style.css";
 import productStore from "../store/productStore";
@@ -11,8 +11,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import * as solid from "@fortawesome/free-regular-svg-icons";
 
 const ProductDetail = () => {
-  const { loading, selectedProduct, getProductDetail } =
-    productStore();
+  const { loading, selectedProduct, getProductDetail } = productStore();
   const { addToCart, error, resetError } = cartStore();
   const { showToastMessage } = useCommonUiStore();
   const { user } = userStore();
@@ -23,15 +22,12 @@ const ProductDetail = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    //상품 디테일 정보 가져오기
     getProductDetail(id);
-    // 컴포넌트 언마운트 시 에러 초기화
     return () => {
       resetError();
     };
   }, [id, getProductDetail, resetError]);
 
-  // error 메세지가 있거나 "" 빈문자열이 아닐때, 에러메세지
   useEffect(() => {
     if (error && error !== "") {
       showToastMessage(error, "error");
@@ -40,12 +36,10 @@ const ProductDetail = () => {
 
   // 카트에 아이템 담기
   const addItemToCart = async () => {
-    // 사이즈를 아직 선택안했다면 에러
     if (size === "") {
       setSizeError(true);
       return;
     }
-    // 아직 로그인을 안한유저라면 로그인페이지로
     if (!user) {
       navigate("/login");
       showToastMessage(
@@ -78,10 +72,6 @@ const ProductDetail = () => {
     setSize(value);
   };
 
-  //카트에러가 있으면 에러메세지 보여주기
-
-  //에러가 있으면 에러메세지 보여주기
-
   return (
     <div>
       {loading ? (
@@ -101,17 +91,21 @@ const ProductDetail = () => {
       ) : (
         <Container className="product-detail-card">
           <Row>
-            {selectedProduct?.images &&
-              selectedProduct?.images.map((img) => (
-                <Col sm={3}>
-                  <img
-                    src={img}
-                    className="w-100"
-                    alt={selectedProduct?.name}
-                  />
-                </Col>
-              ))}
-
+            <Col sm={6}>
+              {selectedProduct?.images && (
+                <Carousel>
+                  {selectedProduct.images.map((img, idx) => (
+                    <Carousel.Item key={idx}>
+                      <img
+                        className="d-block w-100 h-20"
+                        src={img}
+                        alt={`${selectedProduct?.name}-${idx}`}
+                      />
+                    </Carousel.Item>
+                  ))}
+                </Carousel>
+              )}
+            </Col>
             <Col className="product-info-area" sm={6}>
               <div className="product-info">{selectedProduct?.name}</div>
               <div className="product-info">₩ {selectedProduct?.price}</div>
@@ -163,7 +157,7 @@ const ProductDetail = () => {
                 추가
               </Button>
               <div className="likes-count">
-              <FontAwesomeIcon icon={solid.faHeart} color={'red'} size={'2x'} />
+                <FontAwesomeIcon icon={solid.faHeart} color={'red'} size={'2x'} />
                 <span>좋아요 {selectedProduct?.likes}</span>
               </div>
             </Col>

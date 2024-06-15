@@ -14,8 +14,6 @@ const MyPage = () => {
   const [searchQuery, setSearchQuery] = useState({
     page: query.get("page") || 1,
   });
-  //오더리스트 들고오기
-  // console.log(orderList);
 
   useEffect(() => {
     getOrderList({ ...searchQuery });
@@ -64,7 +62,6 @@ const MyPage = () => {
           breakLinkClassName="page-link"
           containerClassName="pagination"
           activeClassName="active"
-          // className="display-center list-style-none"
         />
       </Container>
     </>

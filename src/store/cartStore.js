@@ -33,14 +33,12 @@ const cartStore = create((set, get) => ({
         loading: false,
         error: "",
         cartList: cartItems,
-        // 카트에 담긴 상품은 기본적으로 선택된 상태
         selectedItems: cartItems.map(item => item._id),
       });
     } catch (error) {
       set({ loading: false, error: error });
     }
   },
-  // 체크박스에 따라 selectedItems 담긴 아이템 변경
   selectItem: (id) => {
     const { selectedItems } = get();
     if (selectedItems.includes(id)) {
@@ -67,14 +65,6 @@ const cartStore = create((set, get) => ({
     set({ loading: true, error: "" });
 
     try {
-      // 문제
-      // 이전에는 await Promise.all(selectedItems.map(async (id) => deleteCartItem(id))); 코드로
-      // 병렬적으로 수행하려고 했지만 요청 중 에러가 발생하여 Promise.all은 중단되어 catch 문이 실행됨.
-
-      // 해결
-      // for of 문을 이용하여 selectedItems의 id 값을 순차적으로 deleteCartItem 함수에 전달
-      // 아마 deleteCartItem 함수는 하나의 아이템만 삭제하는 함수이기 때문에 Promise.all 처럼 한꺼번에 병렬적으로 수행할 경우
-      // 에러가 발생하지 않았나 싶음
       for (const id of selectedItems) {
         await deleteCartItem(id);
       }

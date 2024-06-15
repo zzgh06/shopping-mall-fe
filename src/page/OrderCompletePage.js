@@ -7,7 +7,6 @@ import orderStore from "../store/orderStore";
 
 const OrderCompletePage = () => {
   const { orderNum } = orderStore();
-  //만약 주문번호가 없는상태로 이페이지에 왔다면 다시 메인페이지로 돌아가기
   if(orderNum === ""){
     return (
       <Container className="confirmation-page">

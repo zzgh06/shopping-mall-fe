@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from "react";
-import {useNavigate} from 'react-router-dom';
 import { Form, Modal, Button, Row, Col } from "react-bootstrap";
 import CloudinaryUploadWidget from "../utils/CloudinaryUploadWidget";
 import { CATEGORY, STATUS, SIZE, GENDER } from "../constants/product.constants";
@@ -9,7 +8,6 @@ import { image } from "@cloudinary/url-gen/qualifiers/source";
 import productStore from "../store/productStore";
 import useCommonUiStore from "../store/commonUiStore";
 
-// images 배열로 변경
 const InitialFormData = {
   name: "",
   sku: "",
@@ -22,7 +20,7 @@ const InitialFormData = {
   price: 0,
 };
 const NewItemDialog = ({ mode, showDialog, setShowDialog, searchQuery, setSearchQuery }) => {
-  const { error, createProduct, selectedProduct, editProduct, getProductList, totalPageNumber } = productStore();
+  const { createProduct, selectedProduct, editProduct, getProductList, totalPageNumber } = productStore();
   const { showToastMessage } = useCommonUiStore();
   const [formData, setFormData] = useState(
     mode === "new" ? { ...InitialFormData } : selectedProduct
@@ -31,18 +29,13 @@ const NewItemDialog = ({ mode, showDialog, setShowDialog, searchQuery, setSearch
   const [stockError, setStockError] = useState(false);
   console.log(formData)
   const handleClose = () => {
-    //모든걸 초기화시키고;
     setFormData({ ...InitialFormData });
     setStock([]);
-    // 다이얼로그 닫아주기
     setShowDialog(false)
   };
 
   const handleSubmit = async (event) => {
       event.preventDefault();
-      // console.log("formData", formData);
-      // console.log("formData", stock);
-      
       if (stock.length === 0) return setStockError(true)
     
       const totalStock = stock.reduce((total, item)=>{
@@ -56,61 +49,53 @@ const NewItemDialog = ({ mode, showDialog, setShowDialog, searchQuery, setSearch
           } else {
               showToastMessage('상품생성완료', 'success');
               handleClose();
-              // 상품 생성시 마지막 페이지로 이동
               setSearchQuery({ page: totalPageNumber, name: "" });
           }
       } else {
-          // 상품 수정하기
           const success = await editProduct({...formData, stock: totalStock}, selectedProduct._id);
           if (!success) {
               showToastMessage('상품수정실패', 'error');
           } else {
               showToastMessage('상품수정완료', 'success');
-              // handlePageClick를 통해 searchQuery에 현재 페이지 값 전달하고 있기 때문에
-              // 수정할 아이템이 있는 페이지의 ProductList를 불러옴
               getProductList(searchQuery);
               setShowDialog(false)
           }
       }
   };
 
+  //form에 데이터 넣어주기
   const handleChange = (event) => {
-    //form에 데이터 넣어주기
     const {id, value} = event.target;
     setFormData({ ...formData, [id] : value});
   };
 
+  // 재고타입 추가시 배열에 새 배열 추가
   const addStock = () => {
-    // 재고타입 추가시 배열에 새 배열 추가
     setStock([...stock, []]);
   };
 
+  //재고 삭제하기
   const deleteStock = (idx) => {
-    //재고 삭제하기
     const newStock = stock.filter((item, index)=> index !== idx);
     setStock(newStock);
   };
 
+  //  재고 사이즈 변환하기
   const handleSizeChange = (value, index) => {
-    //  재고 사이즈 변환하기
-    // console.log(value, index)
     const newStock = [...stock];
     newStock[index][0] = value;
     setStock(newStock);
   };
 
+  //재고 수량 변환하기
   const handleStockChange = (value, index) => {
-    //재고 수량 변환하기
     const newStock = [...stock];
     newStock[index][1] = value;
     setStock(newStock);
   };
 
   const onHandleCategory = (event) => {
-    // top, dress, pants
-    // formData의 category 배열에 이미 해당 카테고리가 포함되어 있는지 확인
     if (formData.category.includes(event.target.value)) {
-      // 포함되어 있다면 해당 카테고리를 배열에서 제거
       const newCategory = formData.category.filter(
         (item) => item !== event.target.value
       );
@@ -119,7 +104,6 @@ const NewItemDialog = ({ mode, showDialog, setShowDialog, searchQuery, setSearch
         category: [...newCategory],
       });
     } else {
-      // 포함되어 있지 않다면 해당 카테고리를 배열에 추가
       setFormData({
         ...formData,
         category: [...formData.category, event.target.value],
@@ -129,7 +113,6 @@ const NewItemDialog = ({ mode, showDialog, setShowDialog, searchQuery, setSearch
 
   const onHandleGender = (event) => {
     if (formData.gender.includes(event.target.value)) {
-      // 포함되어 있다면 해당 카테고리를 배열에서 제거
       const newGender = formData.gender.filter(
         (item) => item !== event.target.value
       );
@@ -138,7 +121,6 @@ const NewItemDialog = ({ mode, showDialog, setShowDialog, searchQuery, setSearch
         gender: [...newGender],
       });
     } else {
-      // 포함되어 있지 않다면 해당 카테고리를 배열에 추가
       setFormData({
         ...formData,
         gender: [...formData.gender, event.target.value],
@@ -148,7 +130,6 @@ const NewItemDialog = ({ mode, showDialog, setShowDialog, searchQuery, setSearch
 
   // 이미지 업로드
   const uploadImage = (url) => {
-    // 이미지 URL을 배열에 추가
     setFormData((prevData) => ({
       ...prevData,
       images: [...prevData?.images, url]
@@ -158,7 +139,6 @@ const NewItemDialog = ({ mode, showDialog, setShowDialog, searchQuery, setSearch
   useEffect(() => {
     if (showDialog) {
       if (mode === "edit") {
-        // 선택된 데이터값 불러오기 (재고 형태 객체에서 어레이로 바꾸기)
         setFormData(selectedProduct)
         const stockArray = Object.keys(selectedProduct.stock).map((size)=>[
           size, 
@@ -166,14 +146,11 @@ const NewItemDialog = ({ mode, showDialog, setShowDialog, searchQuery, setSearch
         ]);
         setStock(stockArray);
       } else {
-        // 초기화된 값 불러오기
         setFormData({...InitialFormData});
         setStock([]);
       }
     }
   }, [showDialog]);
-
-  //에러나면 토스트 메세지 보여주기
 
   return (
     <Modal show={showDialog} onHide={handleClose}>
@@ -285,7 +262,6 @@ const NewItemDialog = ({ mode, showDialog, setShowDialog, searchQuery, setSearch
         </Form.Group>
 
         <Form className="form-container" onSubmit={handleSubmit}>
-        {/* Other form groups */}
         <Form.Group className="mb-3" controlId="Image" required>
           <Form.Label>Images</Form.Label>
           <CloudinaryUploadWidget uploadImage={uploadImage} />
@@ -296,7 +272,6 @@ const NewItemDialog = ({ mode, showDialog, setShowDialog, searchQuery, setSearch
             ))}
           </div>
         </Form.Group>
-        {/* Other form groups */}
       </Form>
 
         <Row className="mb-3">

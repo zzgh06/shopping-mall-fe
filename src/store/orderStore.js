@@ -13,12 +13,10 @@ const orderStore = create((set, get) => ({
     set({ loading: true, error: "" });
     try {
       const response = await api.post("/order", data);
-      // console.log('rrr', response.data.orderNum)
       set({ loading: false, error: "", orderNum: response.data.orderNum });
       navigate("/payment/success");
       return true;
     } catch (error) {
-      // console.log(error.error)
       set({ loading: false });
       const { showToastMessage } = useCommonUiStore.getState();
       showToastMessage(error.error, "error");
@@ -30,7 +28,6 @@ const orderStore = create((set, get) => ({
     set({ loading: true, error: "" });
     try {
       const response = await api.get("/order/me", { params: { ...query } });
-      console.log(response.data)
       set({
         loading: false,
         error: "",
@@ -48,7 +45,6 @@ const orderStore = create((set, get) => ({
     set({ loading: true, error: "" });
     try {
       const response = await api.put(`/order/${id}`, { status });
-      // console.log(response);
       set({ loading: false, error: "" });
       const { showToastMessage } = useCommonUiStore.getState();
       showToastMessage("주문상태 변경을 성공하였습니다", "success");

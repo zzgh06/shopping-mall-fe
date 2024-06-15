@@ -1,6 +1,7 @@
 import { create } from "zustand";
 import api from "../utils/api";
 import userStore from "./userStore";
+import commonUiStore from "./commonUiStore";
 
 const productStore = create((set, get) => ({
   loading: false,
@@ -13,7 +14,6 @@ const productStore = create((set, get) => ({
     set({ loading: true, error: "" });
     try {
       const response = await api.post("/product", formData);
-      console.log(response);
       set({ loading: false, error: "" });
       return true;
     } catch (error) {
@@ -24,14 +24,10 @@ const productStore = create((set, get) => ({
   // 상품정보 가져오기
   getProductList: async (query) => {
     set({ loading: true, error: "" });
-    // console.log('qqq',query)
     try {
-      // 옵션으로 쿼리 추가
       const response = await api.get("/product", {
         params: { ...query },
       });
-      // console.log(response)
-      // console.log(response.data.products)
       set({
         loading: false,
         error: "",
@@ -46,7 +42,6 @@ const productStore = create((set, get) => ({
     set({ loading: true, error: "" });
     try {
       const response = await api.get(`/product/${id}`);
-      // console.log(response.data.data)
       set({ loading: false, selectedProduct: response?.data.data });
     } catch (error) {
       set({ loading: false, error: error });
@@ -54,7 +49,6 @@ const productStore = create((set, get) => ({
   },
   // 선택한 상품 정보 불러오기
   setSelectedProduct: (product) => {
-    // console.log(product)
     set({ selectedProduct: product });
   },
   // 상품 수정하기
@@ -85,10 +79,7 @@ const productStore = create((set, get) => ({
     set({ loading: true, error: "" });
     try {
       const response = await api.post(`/product/${id}/likes`);
-      console.log("response", response.data);
-
-      // Update the likedProducts state in userStore
-      const { user, likedProducts } = userStore.getState();
+      const { likedProducts } = userStore.getState();
       const alreadyLiked = likedProducts.includes(id);
       const updatedLikedProducts = alreadyLiked
         ? likedProducts.filter((productId) => productId !== id)
@@ -99,6 +90,11 @@ const productStore = create((set, get) => ({
       set({ loading: false, error: "" });
     } catch (error) {
       set({ loading: false, error: error });
+      const { showToastMessage } = commonUiStore.getState();
+      showToastMessage(
+        "로그인 유저만 좋아요를 할 수 있습니다, 로그인 부탁드립니다.",
+        "error"
+      );
       return false;
     }
   },

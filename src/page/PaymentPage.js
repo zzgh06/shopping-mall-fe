@@ -28,10 +28,8 @@ const PaymentPage = () => {
     (total, item) => total + item.productId.price * item.qty,
     0
   );
-  // console.log(selectedItems)
-  // console.log(totalPrice)
+
   const navigate = useNavigate();
-  const [firstLoading, setFirstLoading] = useState(true);
   const [shipInfo, setShipInfo] = useState({
     firstName: "",
     lastName: "",
@@ -67,13 +65,11 @@ const PaymentPage = () => {
   };
 
   const handleFormChange = (event) => {
-    //shipInfo에 값 넣어주기
     const { name, value } = event.target;
     setShipInfo({ ...shipInfo, [name]: value });
   };
 
   const handlePaymentInfoChange = (event) => {
-    //카드정보 넣어주기
     const { name, value } = event.target;
     if (name === "expiry") {
       let newValue = cc_expires_format(value);
@@ -86,7 +82,6 @@ const PaymentPage = () => {
   const handleInputFocus = (e) => {
     setCardValue({ ...cardValue, focus: e.target.name });
   };
-  //카트에 아이템이 없다면 다시 카트페이지로 돌아가기 (결제할 아이템이 없으니 결제페이지로 가면 안됌)
   useEffect(() => {
     if (cartList.length === 0) {
       navigate("/cart");

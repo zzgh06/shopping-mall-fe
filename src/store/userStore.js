@@ -29,7 +29,6 @@ const userStore = create((set, get) => ({
       if (response.status !== 200) throw new Error(response.error);
       sessionStorage.setItem("token", response.data.token);
 
-      // Fetch user data and update likedProducts
       await get().fetchUserData();
     } catch (error) {
       set({ loading: false, error: error.error });
